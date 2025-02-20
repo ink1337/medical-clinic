@@ -20,13 +20,17 @@ public class PatientRepository {
         return Collections.unmodifiableList(patients);
     }
 
-    public Optional<Patient> findPatientByEmail(String email) {//to do jak lista pacjentów pusta
-        return patients.stream().filter(patient -> patient !=null && patient.getEmail().equals(email)).findFirst().map(patient -> patient.toBuilder().build());
+    public Optional<Patient> findPatientByEmail(String email) {
+        return patients.stream()
+                .filter(patient -> patient.getEmail().equals(email))
+                .findFirst()
+                .map(patient -> patient.toBuilder().build());
+
     }
 
     public boolean updateByEmail(Patient updatedPatient, String referencedEmail) {
         return patients.stream()
-                .filter(p -> p!=null&& p.getEmail().equals(referencedEmail))
+                .filter(p -> p.getEmail().equals(referencedEmail))
                 .findFirst()
                 .map(existingPatient -> {
                     existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
@@ -46,7 +50,10 @@ public class PatientRepository {
         patients.add(patient);
     }
 
-    public boolean deletePatient(Patient patient) {
-        return patients.remove(patient);
+    public boolean deletePatientByEmail(String email) {
+        Optional<Patient> patientOp = patients.stream()
+                .filter(patient -> patient.getEmail().equals(email))
+                .findFirst();
+        return patientOp.map(patients::remove).orElse(false);
     }
 }

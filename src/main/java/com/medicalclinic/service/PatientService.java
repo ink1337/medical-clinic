@@ -27,10 +27,10 @@ public class PatientService {
     }
 
     public boolean deletePatientByEmail(String email) {
-        return patientRepository.findPatientByEmail(email).map(patientRepository::deletePatient).orElse(false);
+        return patientRepository.deletePatientByEmail(email);
     }
 
     public boolean updatePatientByEmail(Patient newPatient, String referencedEmail) {
-        return newPatient != null && patientRepository.updateByEmail(newPatient, referencedEmail);
+        return patientRepository.updateByEmail(newPatient, referencedEmail);
     }
 }
