@@ -13,7 +13,7 @@ public class Patient {
     private String firstName;
     private String lastName;
     private Date birthday;
-    private Long idCardNo;
+    private String idCardNo;
     private String phoneNumber;
 
 }
