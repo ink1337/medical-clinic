@@ -1,5 +1,6 @@
 package com.medicalclinic.service;
 
+import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.model.Patient;
 import com.medicalclinic.repository.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,10 @@ public class PatientService {
     }
 
     public Patient getPatientByEmail(String email) {
-        return patientRepository.findPatientByEmail(email).orElse(null);
+        return patientRepository.findPatientByEmail(email).orElseThrow(() -> new ProcessingPatientException("Patient with email " + email + " not found"));
     }
 
-    public void addNewPatient(Patient patient) {
+    public void addPatient(Patient patient) {
         patientRepository.persist(patient);
     }
 

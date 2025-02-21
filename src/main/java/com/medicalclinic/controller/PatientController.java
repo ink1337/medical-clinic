@@ -1,7 +1,9 @@
 package com.medicalclinic.controller;
 
+import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.model.Patient;
 import com.medicalclinic.service.PatientService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class PatientController {
     }
 
     @PostMapping
-    public void addNewPatient(@RequestBody Patient patient) {
-        patientService.addNewPatient(patient);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addPatient(@RequestBody Patient patient) {
+        patientService.addPatient(patient);
     }
 
     @DeleteMapping("/{email}")
@@ -38,5 +41,10 @@ public class PatientController {
     @PutMapping("/{email}")
     public boolean editPatient(@PathVariable("email") String email, @RequestBody Patient newPatient) {
         return patientService.updatePatientByEmail(newPatient, email);
+    }
+    @ExceptionHandler(ProcessingPatientException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleIllegalArgument(ProcessingPatientException ex) {
+        return ex.getMessage();
     }
 }

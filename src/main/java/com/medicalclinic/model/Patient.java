@@ -3,7 +3,7 @@ package com.medicalclinic.model;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder(toBuilder = true)
@@ -12,7 +12,7 @@ public class Patient {
     private String password;
     private String firstName;
     private String lastName;
-    private Date birthday;
+    private LocalDate birthday;
     private String idCardNo;
     private String phoneNumber;
 

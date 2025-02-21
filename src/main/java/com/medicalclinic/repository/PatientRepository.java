@@ -1,5 +1,6 @@
 package com.medicalclinic.repository;
 
+import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.model.Patient;
 import org.springframework.stereotype.Repository;
 
@@ -25,35 +26,37 @@ public class PatientRepository {
                 .filter(patient -> patient.getEmail().equals(email))
                 .findFirst()
                 .map(patient -> patient.toBuilder().build());
-
     }
 
     public boolean updateByEmail(Patient updatedPatient, String referencedEmail) {
-        return patients.stream()
-                .filter(p -> p.getEmail().equals(referencedEmail))
-                .findFirst()
-                .map(existingPatient -> {
-                    existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
-                    existingPatient.setFirstName(Optional.ofNullable(updatedPatient.getFirstName()).orElse(existingPatient.getFirstName()));
-                    existingPatient.setLastName(Optional.ofNullable(updatedPatient.getLastName()).orElse(existingPatient.getLastName()));
-                    existingPatient.setBirthday(Optional.ofNullable(updatedPatient.getBirthday()).orElse(existingPatient.getBirthday()));
-                    existingPatient.setIdCardNo(Optional.ofNullable(updatedPatient.getIdCardNo()).orElse(existingPatient.getIdCardNo()));
-                    existingPatient.setEmail(Optional.ofNullable(updatedPatient.getEmail()).orElse(existingPatient.getEmail()));
-                    existingPatient.setPhoneNumber(Optional.ofNullable(updatedPatient.getPhoneNumber()).orElse(existingPatient.getPhoneNumber()));
-                    return true;
-                })
-                .orElse(false);
+            Patient existingPatient = patients.stream()
+                    .filter(patient -> patient.getEmail().equals(referencedEmail))
+                    .findFirst()
+                    .orElseThrow(() -> new ProcessingPatientException("Patient with email " + referencedEmail + " not found"));
+
+            existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
+            existingPatient.setFirstName(Optional.ofNullable(updatedPatient.getFirstName()).orElse(existingPatient.getFirstName()));
+            existingPatient.setLastName(Optional.ofNullable(updatedPatient.getLastName()).orElse(existingPatient.getLastName()));
+            existingPatient.setBirthday(Optional.ofNullable(updatedPatient.getBirthday()).orElse(existingPatient.getBirthday()));
+            existingPatient.setIdCardNo(Optional.ofNullable(updatedPatient.getIdCardNo()).orElse(existingPatient.getIdCardNo()));
+            existingPatient.setEmail(Optional.ofNullable(updatedPatient.getEmail()).orElse(existingPatient.getEmail()));
+            existingPatient.setPhoneNumber(Optional.ofNullable(updatedPatient.getPhoneNumber()).orElse(existingPatient.getPhoneNumber()));
+            return true;
     }
 
 
     public void persist(Patient patient) {
+        if(findPatientByEmail(patient.getEmail()).isPresent()){
+            throw new ProcessingPatientException("Cannot add this Patient beacuse one already exist with this mail: " + patient.getEmail());
+        }
         patients.add(patient);
     }
 
     public boolean deletePatientByEmail(String email) {
-        Optional<Patient> patientOp = patients.stream()
+        return patients.stream()
                 .filter(patient -> patient.getEmail().equals(email))
-                .findFirst();
-        return patientOp.map(patients::remove).orElse(false);
+                .findFirst()
+                .map(patients::remove)
+                .orElseThrow(() -> new ProcessingPatientException("Patient with email " + email + " not found"));
     }
 }
