@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,5 +47,10 @@ public class PatientController {
     @PutMapping("/{email}")
     public boolean editPatient(@PathVariable("email") String email, @RequestBody Patient newPatient) {
         return patientService.updatePatientByEmail(newPatient, email);
+    }
+
+    @PatchMapping("/{email}")
+    public boolean changePassword(@PathVariable("email") String email, @RequestBody String password){
+        return patientService.changePasswordByEmail(email, password);
     }
 }
