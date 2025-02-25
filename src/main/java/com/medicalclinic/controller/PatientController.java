@@ -2,6 +2,7 @@ package com.medicalclinic.controller;
 
 import java.util.List;
 
+import com.medicalclinic.model.Password;
 import com.medicalclinic.model.Patient;
 import com.medicalclinic.service.PatientService;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,7 @@ public class PatientController {
     }
 
     @PatchMapping("/{email}")
-    public boolean changePassword(@PathVariable("email") String email, @RequestBody String password){
-        return patientService.changePasswordByEmail(email, password);
+    public boolean changePassword(@PathVariable("email") String email, @RequestBody Password password){
+        return patientService.changePasswordByEmail(email, password.getPassword());
     }
 }
