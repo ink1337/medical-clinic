@@ -29,11 +29,14 @@ public class PatientRepository {
     public boolean updateByEmail(Patient updatedPatient, String referencedEmail) {
         Patient existingPatient = findPatientByEmailInternal(referencedEmail)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", referencedEmail)));
+        String idCardNo = updatedPatient.getIdCardNo();
+        if (idCardNo != null && !idCardNo.isBlank()) {
+            throw new ProcessingPatientException(getMessage("patient.cannot_change_idCardNo", referencedEmail));
+        }
         existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
         existingPatient.setFirstName(Optional.ofNullable(updatedPatient.getFirstName()).orElse(existingPatient.getFirstName()));
         existingPatient.setLastName(Optional.ofNullable(updatedPatient.getLastName()).orElse(existingPatient.getLastName()));
         existingPatient.setBirthday(Optional.ofNullable(updatedPatient.getBirthday()).orElse(existingPatient.getBirthday()));
-        existingPatient.setIdCardNo(Optional.ofNullable(updatedPatient.getIdCardNo()).orElse(existingPatient.getIdCardNo()));
         existingPatient.setEmail(Optional.ofNullable(updatedPatient.getEmail()).orElse(existingPatient.getEmail()));
         existingPatient.setPhoneNumber(Optional.ofNullable(updatedPatient.getPhoneNumber()).orElse(existingPatient.getPhoneNumber()));
         return true;
