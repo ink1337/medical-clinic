@@ -52,6 +52,6 @@ public class PatientController {
 
     @PatchMapping("/{email}")
     public boolean changePassword(@PathVariable("email") String email, @RequestBody Password password){
-        return patientService.changePasswordByEmail(email, password.getPassword());
+        return patientService.changePasswordByEmail(email, password.password());
     }
 }
