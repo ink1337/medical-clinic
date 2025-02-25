@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DictionaryHandler {
-    static final String PATH_TO_ERRORS = "errors";
+    private static final String PATH_TO_ERRORS = "errors";
 
     public static String getMessage(String key, Object... params) {
         ResourceBundle resourceBundle = getBundle(PATH_TO_ERRORS, Locale.getDefault());
