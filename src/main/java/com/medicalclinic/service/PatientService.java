@@ -37,7 +37,7 @@ public class PatientService {
     }
 
     public boolean changePasswordByEmail(String email, String password) {
-        var patient = com.medicalclinic.model.Patient.builder()
+        var patient = Patient.builder()
                 .password(password)
                 .build();
         return patientRepository.updateByEmail(patient, email);
