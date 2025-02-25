@@ -1,22 +1,21 @@
 package com.medicalclinic.repository;
 
-import com.medicalclinic.exception.ProcessingPatientException;
-import com.medicalclinic.model.Patient;
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Repository;
-
-import java.util.*;
-
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import com.medicalclinic.exception.ProcessingPatientException;
+import com.medicalclinic.model.Patient;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Repository;
+
 @Repository
+@AllArgsConstructor
 public class PatientRepository {
 
     private final List<Patient> patients;
-
-    public PatientRepository() {
-        this.patients = new ArrayList<>();
-    }
 
     public List<Patient> listAll() {
         return Collections.unmodifiableList(patients);
@@ -25,12 +24,6 @@ public class PatientRepository {
     public Optional<Patient> findPatientByEmail(String email) {
         return findPatientByEmailInternal(email)
                 .map(patient -> patient.toBuilder().build());
-    }
-
-    private Optional<Patient> findPatientByEmailInternal(String email) {
-        return patients.stream()
-                .filter(patient -> patient.getEmail().equals(email))
-                .findFirst();
     }
 
     public boolean updateByEmail(Patient updatedPatient, String referencedEmail) {
@@ -57,5 +50,11 @@ public class PatientRepository {
         return findPatientByEmailInternal(email)
                 .map(patients::remove)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+    }
+
+    private Optional<Patient> findPatientByEmailInternal(String email) {
+        return patients.stream()
+                .filter(patient -> patient.getEmail().equals(email))
+                .findFirst();
     }
 }

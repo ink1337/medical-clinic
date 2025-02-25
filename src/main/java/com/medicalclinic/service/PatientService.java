@@ -1,25 +1,19 @@
 package com.medicalclinic.service;
 
+import static com.medicalclinic.exception.DictionaryHandler.getMessage;
+
+import java.util.List;
+
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.model.Patient;
 import com.medicalclinic.repository.PatientRepository;
-import org.springframework.context.MessageSource;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Locale;
-
-import static com.medicalclinic.exception.DictionaryHandler.getMessage;
-
+@AllArgsConstructor
 @Service
 public class PatientService {
-    private final MessageSource messageSource;
     private final PatientRepository patientRepository;
-
-    public PatientService(MessageSource messageSource, PatientRepository patientRepository) {
-        this.messageSource = messageSource;
-        this.patientRepository = patientRepository;
-    }
 
     public List<Patient> getPatients() {
         return patientRepository.listAll();

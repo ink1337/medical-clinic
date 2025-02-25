@@ -6,11 +6,12 @@ import java.util.ResourceBundle;
 
 import static java.util.ResourceBundle.getBundle;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DictionaryHandler {
     static final String PATH_TO_ERRORS = "errors";
-
-    private DictionaryHandler() {
-    }
 
     public static String getMessage(String key, Object... params) {
         ResourceBundle resourceBundle = getBundle(PATH_TO_ERRORS, Locale.getDefault());
