@@ -10,7 +10,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DictionaryHandler {
+public final class DictionaryHandler {
     static final String PATH_TO_ERRORS = "errors";
 
     public static String getMessage(String key, Object... params) {
