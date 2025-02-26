@@ -15,35 +15,34 @@ import org.springframework.stereotype.Component;
 public class PatientValidator {
     private PatientRepository patientRepository;
 
-    public void validatePatientForUpdate(Patient newPatient, Patient existingPatient) {
-        if(!Objects.equals(newPatient.getEmail(), existingPatient.getEmail())&& patientRepository.findPatientByEmail(newPatient.getEmail()).isPresent()){
-            throw new ProcessingPatientException(getMessage("patient.already_exists", existingPatient.getEmail()));
+    public void validatePatientForUpdate(Patient newPatient, String referencedEmail, String referencedIdCardNo) {
+        var newEmail = newPatient.getEmail();
+        var newIdCardNo = newPatient.getIdCardNo();
+
+        if (!Objects.equals(newEmail, referencedEmail) && patientRepository.checkIfPatientWithEmailExists(newEmail)) {
+            throw new ProcessingPatientException(getMessage("patient.already_exists", referencedEmail));
         }
-        String idCardNo = newPatient.getIdCardNo();
-        if (!Objects.equals(idCardNo, existingPatient.getIdCardNo())) {
-            throw new ProcessingPatientException(getMessage("patient.cannot_change_idCardNo", existingPatient.getEmail()));
+        if (!Objects.equals(newIdCardNo, referencedIdCardNo)) {
+            throw new ProcessingPatientException(getMessage("patient.cannot_change_idCardNo", referencedEmail));
         }
     }
 
     public void validatePatientForPersist(Patient patient) {
-        validateIfPatientAlreadyExists(patient);
+        if (patientRepository.checkIfPatientWithEmailExists(patient.getEmail())) {
+            throw new ProcessingPatientException(getMessage("patient.already_exists", patient.getEmail()));
+        }
         validateNoneNullFields(patient);
     }
 
-    private void validateIfPatientAlreadyExists(Patient patient) {
-        if (patientRepository.findPatientByEmail(patient.getEmail()).isPresent()) {
-            throw new ProcessingPatientException(getMessage("patient.already_exists", patient.getEmail()));
-        }
-    }
 
     private void validateNoneNullFields(Patient patient) {
-        if(patient.getEmail() == null
+        if (patient.getEmail() == null
                 || patient.getPassword() == null
                 || patient.getIdCardNo() == null
                 || patient.getFirstName() == null
                 || patient.getLastName() == null
                 || patient.getPhoneNumber() == null
-                || patient.getBirthday() == null){
+                || patient.getBirthday() == null) {
             throw new ProcessingPatientException(getMessage("patient.all_field_must_be_set", patient.getEmail()));
         }
     }

@@ -31,7 +31,7 @@ public class PatientRepository {
     public boolean updateByEmail(Patient updatedPatient, String referencedEmail) {
         Patient existingPatient = findPatientByEmailInternal(referencedEmail)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", referencedEmail)));
-        patientValidator.validatePatientForUpdate(updatedPatient, existingPatient);
+        patientValidator.validatePatientForUpdate(updatedPatient, existingPatient.getEmail(), existingPatient.getIdCardNo());
 
         existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
         existingPatient.setEmail(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getEmail()));
@@ -58,5 +58,8 @@ public class PatientRepository {
         return patients.stream()
                 .filter(patient -> patient.getEmail().equals(email))
                 .findFirst();
+    }
+    public boolean checkIfPatientWithEmailExists(String email) {
+        return findPatientByEmail(email).isPresent();
     }
 }
