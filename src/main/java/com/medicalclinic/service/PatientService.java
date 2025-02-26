@@ -35,4 +35,11 @@ public class PatientService {
     public boolean updatePatientByEmail(Patient newPatient, String referencedEmail) {
         return patientRepository.updateByEmail(newPatient, referencedEmail);
     }
+
+    public boolean changePasswordByEmail(String email, String password) {
+        var patient = Patient.builder()
+                .password(password)
+                .build();
+        return patientRepository.updateByEmail(patient, email);
+    }
 }
