@@ -34,6 +34,7 @@ public class PatientRepository {
         patientValidator.validatePatientForUpdate(updatedPatient, existingPatient);
 
         existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
+        existingPatient.setEmail(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getEmail()));
         existingPatient.setFirstName(Optional.ofNullable(updatedPatient.getFirstName()).orElse(existingPatient.getFirstName()));
         existingPatient.setLastName(Optional.ofNullable(updatedPatient.getLastName()).orElse(existingPatient.getLastName()));
         existingPatient.setBirthday(Optional.ofNullable(updatedPatient.getBirthday()).orElse(existingPatient.getBirthday()));
@@ -50,7 +51,7 @@ public class PatientRepository {
     public boolean deletePatientByEmail(String email) {
         return findPatientByEmailInternal(email)
                 .map(patients::remove)
-                .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+                .orElse(false);
     }
 
     private Optional<Patient> findPatientByEmailInternal(String email) {

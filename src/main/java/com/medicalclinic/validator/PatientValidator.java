@@ -16,6 +16,9 @@ public class PatientValidator {
     private PatientRepository patientRepository;
 
     public void validatePatientForUpdate(Patient newPatient, Patient existingPatient) {
+        if(!Objects.equals(newPatient.getEmail(), existingPatient.getEmail())&& patientRepository.findPatientByEmail(newPatient.getEmail()).isPresent()){
+            throw new ProcessingPatientException(getMessage("patient.already_exists", existingPatient.getEmail()));
+        }
         String idCardNo = newPatient.getIdCardNo();
         if (!Objects.equals(idCardNo, existingPatient.getIdCardNo())) {
             throw new ProcessingPatientException(getMessage("patient.cannot_change_idCardNo", existingPatient.getEmail()));
