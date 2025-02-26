@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.model.Patient;
+import com.medicalclinic.validator.PatientValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
 public class PatientRepository {
 
     private final List<Patient> patients;
+    private final PatientValidator patientValidator;
 
     public List<Patient> listAll() {
         return Collections.unmodifiableList(patients);
@@ -29,10 +31,8 @@ public class PatientRepository {
     public boolean updateByEmail(Patient updatedPatient, String referencedEmail) {
         Patient existingPatient = findPatientByEmailInternal(referencedEmail)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", referencedEmail)));
-        String idCardNo = updatedPatient.getIdCardNo();
-        if (idCardNo != null && !idCardNo.isBlank()) {
-            throw new ProcessingPatientException(getMessage("patient.cannot_change_idCardNo", referencedEmail));
-        }
+        patientValidator.validatePatientForUpdate(updatedPatient, referencedEmail);
+
         existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
         existingPatient.setFirstName(Optional.ofNullable(updatedPatient.getFirstName()).orElse(existingPatient.getFirstName()));
         existingPatient.setLastName(Optional.ofNullable(updatedPatient.getLastName()).orElse(existingPatient.getLastName()));
