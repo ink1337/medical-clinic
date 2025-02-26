@@ -31,7 +31,7 @@ public class PatientRepository {
     public boolean updateByEmail(Patient updatedPatient, String referencedEmail) {
         Patient existingPatient = findPatientByEmailInternal(referencedEmail)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", referencedEmail)));
-        patientValidator.validatePatientForUpdate(updatedPatient, referencedEmail);
+        patientValidator.validatePatientForUpdate(updatedPatient, existingPatient);
 
         existingPatient.setPassword(Optional.ofNullable(updatedPatient.getPassword()).orElse(existingPatient.getPassword()));
         existingPatient.setFirstName(Optional.ofNullable(updatedPatient.getFirstName()).orElse(existingPatient.getFirstName()));
@@ -43,9 +43,7 @@ public class PatientRepository {
     }
 
     public void persist(Patient patient) {
-        if (findPatientByEmail(patient.getEmail()).isPresent()) {
-            throw new ProcessingPatientException(getMessage("patient.already_exists", patient.getEmail()));
-        }
+        patientValidator.validatePatientForPersist(patient);
         patients.add(patient);
     }
 
