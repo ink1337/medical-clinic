@@ -20,13 +20,11 @@ public class PatientValidator {
         if (!Objects.equals(idCardNo, existingPatient.getIdCardNo())) {
             throw new ProcessingPatientException(getMessage("patient.cannot_change_idCardNo", existingPatient.getEmail()));
         }
-
     }
 
     public void validatePatientForPersist(Patient patient) {
         validateIfPatientAlreadyExists(patient);
         validateNoneNullFields(patient);
-
     }
 
     private void validateIfPatientAlreadyExists(Patient patient) {
