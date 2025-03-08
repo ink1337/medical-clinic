@@ -1,7 +1,6 @@
 package com.medicalclinic.model.dto;
 
 
-import com.medicalclinic.model.entity.Facility;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,5 +14,5 @@ public class DoctorDTO {
     private String firstName;
     private String lastName;
     private String speciality;
-    private Set<Facility> facilities;
+    private Set<String> facilities;
 }
