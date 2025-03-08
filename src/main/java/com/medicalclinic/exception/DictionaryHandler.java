@@ -1,13 +1,13 @@
 package com.medicalclinic.exception;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static java.util.ResourceBundle.getBundle;
-
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DictionaryHandler {
@@ -16,6 +16,6 @@ public final class DictionaryHandler {
     public static String getMessage(String key, Object... params) {
         ResourceBundle resourceBundle = getBundle(PATH_TO_ERRORS, Locale.getDefault());
         var message = resourceBundle.getString(key);
-        return MessageFormat.format(message, params);
+        return MessageFormat.format(message, params); //todo: dla You cant change idCardNo, email: {0}. nie działa
     }
 }
