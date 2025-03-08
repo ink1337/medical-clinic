@@ -6,11 +6,10 @@ import com.medicalclinic.model.dto.PatientDTO;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
 import com.medicalclinic.validator.PatientValidator;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
@@ -22,24 +21,26 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
-
-    public List<Patient> getPatients() {
-        return new ArrayList<>(patientRepository.findAll());
+    public List<PatientDTO> getAll() {
+        return patientRepository.findAll().stream()
+                .map(patientMapper::toDTO)
+                .toList();
     }
 
-    public Patient getPatientByEmail(String email) {
+    public PatientDTO getByEmail(String email) {
         return patientRepository.findByEmail(email)
+                .map(patientMapper::toDTO)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
     }
 
     @Transactional
-    public void addPatient(Patient patient) {
+    public void add(Patient patient) {
         patientValidator.validatePatientForPersist(patient);
         patientRepository.save(patient);
     }
 
     @Transactional
-    public boolean deletePatientByEmail(String email) {
+    public boolean deleteByEmail(String email) {
         var patientOptional = patientRepository.findByEmail(email);
         if (patientOptional.isPresent()) {
             patientRepository.delete(patientOptional.get());
@@ -49,11 +50,11 @@ public class PatientService {
     }
 
     @Transactional
-    public PatientDTO updatePatientByEmail(Patient newPatient, String referencedEmail) {
-        var patientToUpdate = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
-        patientToUpdate.update(newPatient);
-        patientRepository.save(patientToUpdate);
-        return patientMapper.toDTO(patientToUpdate);
+    public PatientDTO updateByEmail(Patient newPatient, String referencedEmail) {
+        var entity = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
+        entity.update(newPatient);
+        patientRepository.save(entity);
+        return patientMapper.toDTO(entity);
     }
 
     @Transactional

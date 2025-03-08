@@ -1,9 +1,9 @@
 package com.medicalclinic.controller;
 
 import com.medicalclinic.model.Password;
-import com.medicalclinic.model.dto.PatientDTO;
-import com.medicalclinic.model.entity.Patient;
-import com.medicalclinic.service.PatientService;
+import com.medicalclinic.model.dto.DoctorDTO;
+import com.medicalclinic.model.entity.Doctor;
+import com.medicalclinic.service.DoctorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,38 +22,44 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/patients")
-public class PatientController {
-    private final PatientService patientService;
+@RequestMapping("/doctors")
+public class DoctorController {
+    private final DoctorService doctorService;
 
     @GetMapping
-    public List<PatientDTO> getPatients() {
-        return patientService.getAll();
+    public List<DoctorDTO> getAll() {
+        return doctorService.getAll();
     }
 
     @GetMapping("/{email}")
-    public PatientDTO getPatientByEmail(@PathVariable("email") String email) {
-        return patientService.getByEmail(email);
+    public DoctorDTO getByName(@PathVariable("email") String email) {
+        return doctorService.getByEmail(email);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPatient(@RequestBody Patient data) {
-        patientService.add(data);
+    public void add(@RequestBody Doctor data) {
+        doctorService.add(data);
     }
 
     @DeleteMapping("/{email}")
-    public boolean deletePatientByEmail(@PathVariable("email") String email) {
-        return patientService.deleteByEmail(email);
+    public boolean deleteByEmail(@PathVariable("email") String email) {
+        return doctorService.deleteByEmail(email);
     }
 
     @PutMapping("/{email}")
-    public PatientDTO editPatient(@PathVariable("email") String email, @RequestBody Patient data) {
-        return patientService.updateByEmail(data, email);
+    public DoctorDTO update(@PathVariable("email") String email, @RequestBody Doctor data) {
+        return doctorService.updateByEmail(data, email);
+    }
+
+    @PatchMapping("/{email}/facilities/{facilityName}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addFacility(@PathVariable("email") String email, @PathVariable("facilityName") String facilityName) {
+        doctorService.addFacility(email, facilityName);
     }
 
     @PatchMapping("/{email}")
     public boolean changePassword(@PathVariable("email") String email, @RequestBody Password changePassword) {
-        return patientService.changePasswordByEmail(email, changePassword.password());
+        return doctorService.changePasswordByEmail(email, changePassword.password());
     }
 }
