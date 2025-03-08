@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
@@ -22,13 +21,15 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
-
-    public List<Patient> getPatients() {
-        return new ArrayList<>(patientRepository.findAll());
+    public List<PatientDTO> getPatients() {
+        return patientRepository.findAll().stream()
+                .map(patientMapper::toDTO)
+                .toList();
     }
 
-    public Patient getPatientByEmail(String email) {
+    public PatientDTO getPatientByEmail(String email) {
         return patientRepository.findByEmail(email)
+                .map(patientMapper::toDTO)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
     }
 
