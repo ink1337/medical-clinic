@@ -1,39 +1,45 @@
 package com.medicalclinic.validator;
 
-import static com.medicalclinic.exception.DictionaryHandler.getMessage;
-
-import java.util.Objects;
-
 import com.medicalclinic.exception.ProcessingPatientException;
-import com.medicalclinic.model.Patient;
+import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
+import static com.medicalclinic.exception.DictionaryHandler.getMessage;
+
 @Component
 @AllArgsConstructor
 public class PatientValidator {
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
 
-    public void validatePatientForUpdate(Patient newPatient, String referencedEmail, String referencedIdCardNo) {
-        var newEmail = newPatient.getEmail();
-        var newIdCardNo = newPatient.getIdCardNo();
+    public Patient validateAndGetPatientToUpdate(Patient newPatient, String referencedEmail) {
+        var newPatientEmail = newPatient.getEmail();
+        var existingPatient = patientRepository.findByEmail(referencedEmail)
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", referencedEmail)));
 
-        if (!Objects.equals(newEmail, referencedEmail) && patientRepository.checkIfPatientWithEmailExists(newEmail)) {
-            throw new ProcessingPatientException(getMessage("patient.already_exists", referencedEmail));
+        if (!Objects.equals(referencedEmail, newPatientEmail)) {
+            validateIfEmailIsValid(newPatientEmail);
         }
-        if (!Objects.equals(newIdCardNo, referencedIdCardNo)) {
+        if (!Objects.equals(newPatient.getIdCardNo(), existingPatient.getIdCardNo())) {
             throw new ProcessingPatientException(getMessage("patient.cannot_change_idCardNo", referencedEmail));
         }
+        return existingPatient;
     }
 
+
     public void validatePatientForPersist(Patient patient) {
-        if (patientRepository.checkIfPatientWithEmailExists(patient.getEmail())) {
-            throw new ProcessingPatientException(getMessage("patient.already_exists", patient.getEmail()));
-        }
+        checkIfPatientWithEmailExists(patient.getEmail());
         validateNoneNullFields(patient);
     }
 
+    private void validateIfEmailIsValid(String email) {
+        if (patientRepository.findByEmail(email).isPresent()) {
+            throw new ProcessingPatientException(getMessage("patient.already_exists", email));
+        }
+    }
 
     private void validateNoneNullFields(Patient patient) {
         if (patient.getEmail() == null
@@ -44,6 +50,12 @@ public class PatientValidator {
                 || patient.getPhoneNumber() == null
                 || patient.getBirthday() == null) {
             throw new ProcessingPatientException(getMessage("patient.all_field_must_be_set", patient.getEmail()));
+        }
+    }
+
+    public void checkIfPatientWithEmailExists(String email) {
+        if (patientRepository.findByEmail(email).isPresent()) {
+            throw new ProcessingPatientException(getMessage("patient.already_exists", email));
         }
     }
 }

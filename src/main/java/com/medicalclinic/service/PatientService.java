@@ -1,45 +1,66 @@
 package com.medicalclinic.service;
 
-import static com.medicalclinic.exception.DictionaryHandler.getMessage;
-
-import java.util.List;
-
 import com.medicalclinic.exception.ProcessingPatientException;
-import com.medicalclinic.model.Patient;
+import com.medicalclinic.mapper.PatientMapper;
+import com.medicalclinic.model.dto.PatientDTO;
+import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
+import com.medicalclinic.validator.PatientValidator;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
 @AllArgsConstructor
 @Service
 public class PatientService {
+    private final PatientValidator patientValidator;
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
+
 
     public List<Patient> getPatients() {
-        return patientRepository.listAll();
+        return new ArrayList<>(patientRepository.findAll());
     }
 
     public Patient getPatientByEmail(String email) {
-        return patientRepository.findPatientByEmail(email)
+        return patientRepository.findByEmail(email)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
     }
 
+    @Transactional
     public void addPatient(Patient patient) {
-        patientRepository.persist(patient);
+        patientValidator.validatePatientForPersist(patient);
+        patientRepository.save(patient);
     }
 
+    @Transactional
     public boolean deletePatientByEmail(String email) {
-        return patientRepository.deletePatientByEmail(email);
+        var patientOptional = patientRepository.findByEmail(email);
+        if (patientOptional.isPresent()) {
+            patientRepository.delete(patientOptional.get());
+            return true;
+        }
+        return false;
     }
 
-    public boolean updatePatientByEmail(Patient newPatient, String referencedEmail) {
-        return patientRepository.updateByEmail(newPatient, referencedEmail);
+    @Transactional
+    public PatientDTO updatePatientByEmail(Patient newPatient, String referencedEmail) {
+        var patientToUpdate = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
+        patientToUpdate.update(newPatient);
+        patientRepository.save(patientToUpdate);
+        return patientMapper.toDTO(patientToUpdate);
     }
 
+    @Transactional
     public boolean changePasswordByEmail(String email, String password) {
-        var patient = Patient.builder()
-                .password(password)
-                .build();
-        return patientRepository.updateByEmail(patient, email);
+        var existingPatient = patientRepository.findByEmail(email)
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+        existingPatient.setPassword(password);
+        return true;
     }
 }
