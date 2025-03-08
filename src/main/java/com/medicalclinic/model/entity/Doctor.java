@@ -53,4 +53,3 @@ public class Doctor {
         this.speciality = updatedDoctor.getSpeciality();
     }
 }
-

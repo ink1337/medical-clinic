@@ -37,8 +37,8 @@ public class Facility {
 
     private String postCode;
 
-    @ManyToMany(mappedBy = "facilities")
-    private Set<Doctor> doctors = new HashSet<>();
+//    @ManyToMany(mappedBy = "facilities")
+//    private Set<Doctor> doctors = new HashSet<>();
 
     public void update(Facility updatedFacility) {
         this.name = updatedFacility.getName();
@@ -46,6 +46,18 @@ public class Facility {
         this.street = updatedFacility.getStreet();
         this.buildingNumber = updatedFacility.getBuildingNumber();
         this.postCode = updatedFacility.getPostCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Facility{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", buildingNumber='" + buildingNumber + '\'' +
+                ", postCode='" + postCode + '\'' +
+                '}';
     }
 }
 

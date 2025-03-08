@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface DoctorMapper {
 
-    //    @Mapping(target = "facilities", expression = "java(new java.util.HashSet<>())")
     @Mapping(target = "facilities", source = "facilities", qualifiedByName = "mapFacilityNames")
     DoctorDTO toDTO(Doctor source);
 
