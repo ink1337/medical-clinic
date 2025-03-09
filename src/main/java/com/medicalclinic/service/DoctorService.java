@@ -37,7 +37,6 @@ public class DoctorService {
 
     @Transactional
     public void add(Doctor patient) {
-
         doctorValidator.validateDoctorForPersist(patient);
         doctorRepository.save(patient);
     }

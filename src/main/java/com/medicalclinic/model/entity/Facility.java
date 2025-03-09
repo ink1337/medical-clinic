@@ -13,7 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -64,28 +63,14 @@ public class Facility {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Facility facility = (Facility) o;
-
-        if (!id.equals(facility.id)) return false;
-        if (!Objects.equals(name, facility.name)) return false;
-        if (!Objects.equals(city, facility.city)) return false;
-        if (!Objects.equals(street, facility.street)) return false;
-        if (!Objects.equals(buildingNumber, facility.buildingNumber))
+        if (!(o instanceof Facility other))
             return false;
-        return Objects.equals(postCode, facility.postCode);
+        return id != null && id.equals((other.getId()));
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (street != null ? street.hashCode() : 0);
-        result = 31 * result + (buildingNumber != null ? buildingNumber.hashCode() : 0);
-        result = 31 * result + (postCode != null ? postCode.hashCode() : 0);
-        return result;
+        return getClass().hashCode();
     }
 }
 
