@@ -6,7 +6,7 @@ import com.medicalclinic.model.dto.PatientDTO;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
 import com.medicalclinic.validator.PatientValidator;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class PatientService {
     private final PatientValidator patientValidator;

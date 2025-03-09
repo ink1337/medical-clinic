@@ -4,7 +4,7 @@ import com.medicalclinic.model.Password;
 import com.medicalclinic.model.dto.DoctorDTO;
 import com.medicalclinic.model.entity.Doctor;
 import com.medicalclinic.service.DoctorService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/doctors")
 public class DoctorController {
@@ -52,10 +52,10 @@ public class DoctorController {
         return doctorService.updateByEmail(data, email);
     }
 
-    @PatchMapping("/{email}/facilities/{facilityName}")
+    @PatchMapping("/{email}/facilities/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addFacility(@PathVariable("email") String email, @PathVariable("facilityName") String facilityName) {
-        doctorService.addFacility(email, facilityName);
+    public void addFacility(@PathVariable("email") String email, @PathVariable("id") Long id) {
+        doctorService.addFacility(email, id);
     }
 
     @PatchMapping("/{email}")

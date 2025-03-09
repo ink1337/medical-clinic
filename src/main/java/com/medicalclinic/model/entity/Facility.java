@@ -19,7 +19,7 @@ import java.util.Set;
 @Table
 @Data
 @Builder(toBuilder = true)
-@AllArgsConstructor()
+@AllArgsConstructor
 @NoArgsConstructor
 public class Facility {
     @Id

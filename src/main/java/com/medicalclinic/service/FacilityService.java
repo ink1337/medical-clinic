@@ -7,14 +7,14 @@ import com.medicalclinic.model.entity.Facility;
 import com.medicalclinic.repository.FacilityRepository;
 import com.medicalclinic.validator.FacilityValidator;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class FacilityService {
     private final FacilityValidator doctorValidator;

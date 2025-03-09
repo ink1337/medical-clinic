@@ -3,7 +3,7 @@ package com.medicalclinic.controller;
 import com.medicalclinic.model.dto.FacilityDTO;
 import com.medicalclinic.model.entity.Facility;
 import com.medicalclinic.service.FacilityService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/facilities")
 public class FacilityController {

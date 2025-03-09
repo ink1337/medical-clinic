@@ -3,7 +3,7 @@ package com.medicalclinic.validator;
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -11,7 +11,7 @@ import java.util.Objects;
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PatientValidator {
     private final PatientRepository patientRepository;
 

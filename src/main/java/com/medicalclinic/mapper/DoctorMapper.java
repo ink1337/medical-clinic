@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface DoctorMapper {
 
-    @Mapping(target = "facilities", source = "facilities", qualifiedByName = "mapFacilityNames")
+    @Mapping(target = "facilities", source = "facilities", qualifiedByName = "mapFacilityIds")
     DoctorDTO toDTO(Doctor source);
 
-    @Named("mapFacilityNames")
-    default Set<String> mapFacilityNames(Set<Facility> facilities) {
+    @Named("mapFacilityIds")
+    default Set<Long> mapFacilityIds(Set<Facility> facilities) {
         return facilities.stream()
-                .map(Facility::getName)
+                .map(Facility::getId)
                 .collect(Collectors.toSet());
     }
 }

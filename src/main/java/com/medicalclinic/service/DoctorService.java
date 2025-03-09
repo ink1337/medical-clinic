@@ -7,7 +7,7 @@ import com.medicalclinic.model.entity.Doctor;
 import com.medicalclinic.repository.DoctorRepository;
 import com.medicalclinic.repository.FacilityRepository;
 import com.medicalclinic.validator.DoctorValidator;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class DoctorService {
     private final DoctorValidator doctorValidator;
@@ -36,9 +36,9 @@ public class DoctorService {
     }
 
     @Transactional
-    public void add(Doctor patient) {
-        doctorValidator.validateDoctorForPersist(patient);
-        doctorRepository.save(patient);
+    public void add(Doctor doctor) {
+        doctorValidator.validateDoctorForPersist(doctor);
+        doctorRepository.save(doctor);
     }
 
     @Transactional
@@ -52,19 +52,19 @@ public class DoctorService {
     }
 
     @Transactional
-    public DoctorDTO updateByEmail(Doctor newPatient, String referencedEmail) {
-        var entity = doctorValidator.validateAndGetDoctorToUpdate(newPatient, referencedEmail);
-        entity.update(newPatient);
+    public DoctorDTO updateByEmail(Doctor data, String referencedEmail) {
+        var entity = doctorValidator.validateAndGetDoctorToUpdate(data, referencedEmail);
+        entity.update(data);
         doctorRepository.save(entity);
         return doctorMapper.toDTO(entity);
     }
 
     @Transactional
-    public void addFacility(String email, String facilityName) {
+    public void addFacility(String email, Long id) {
         var entity = doctorRepository.findByEmail(email)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("doctor.not_found", email)));
-        var facilityEntity = facilityRepository.findByName(facilityName)
-                .orElseThrow(() -> new ProcessingPatientException(getMessage("facility.not_found", facilityName)));
+        var facilityEntity = facilityRepository.findById(id)
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("facility.not_found", id)));
         entity.getFacilities().add(facilityEntity);
 
     }

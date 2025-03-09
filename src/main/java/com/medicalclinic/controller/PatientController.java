@@ -4,7 +4,7 @@ import com.medicalclinic.model.Password;
 import com.medicalclinic.model.dto.PatientDTO;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.service.PatientService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/patients")
 public class PatientController {
@@ -35,7 +35,6 @@ public class PatientController {
     public PatientDTO getPatientByEmail(@PathVariable("email") String email) {
         return patientService.getByEmail(email);
     }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addPatient(@RequestBody Patient data) {

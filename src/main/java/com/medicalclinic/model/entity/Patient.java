@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table
 @Data
 @Builder(toBuilder = true)
-@AllArgsConstructor()
+@AllArgsConstructor
 @NoArgsConstructor
 public class Patient {
     @Id

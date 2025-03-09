@@ -14,14 +14,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table
 @Data
 @Builder(toBuilder = true)
-@AllArgsConstructor()
+@AllArgsConstructor
 @NoArgsConstructor
 public class Doctor {
 
@@ -39,7 +38,7 @@ public class Doctor {
 
     private String speciality;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
             name = "doctor_facility",
             joinColumns = @JoinColumn(name = "doctor_id"),
