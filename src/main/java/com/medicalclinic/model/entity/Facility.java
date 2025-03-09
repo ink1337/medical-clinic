@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -37,8 +38,8 @@ public class Facility {
 
     private String postCode;
 
-//    @ManyToMany(mappedBy = "facilities")
-//    private Set<Doctor> doctors = new HashSet<>();
+    @ManyToMany(mappedBy = "facilities")
+    private Set<Doctor> doctors = new HashSet<>();
 
     public void update(Facility updatedFacility) {
         this.name = updatedFacility.getName();
@@ -58,6 +59,33 @@ public class Facility {
                 ", buildingNumber='" + buildingNumber + '\'' +
                 ", postCode='" + postCode + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Facility facility = (Facility) o;
+
+        if (!id.equals(facility.id)) return false;
+        if (!Objects.equals(name, facility.name)) return false;
+        if (!Objects.equals(city, facility.city)) return false;
+        if (!Objects.equals(street, facility.street)) return false;
+        if (!Objects.equals(buildingNumber, facility.buildingNumber))
+            return false;
+        return Objects.equals(postCode, facility.postCode);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (street != null ? street.hashCode() : 0);
+        result = 31 * result + (buildingNumber != null ? buildingNumber.hashCode() : 0);
+        result = 31 * result + (postCode != null ? postCode.hashCode() : 0);
+        return result;
     }
 }
 
