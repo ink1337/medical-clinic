@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ public class Facility {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true , nullable = false)
     private String name;
 
     private String city;
@@ -49,28 +50,16 @@ public class Facility {
     }
 
     @Override
-    public String toString() {
-        return "Facility{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", buildingNumber='" + buildingNumber + '\'' +
-                ", postCode='" + postCode + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Facility other))
             return false;
-        return id != null && id.equals((other.getId()));
+        return name.equals((other.getName()));
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(name);
     }
 }
 
