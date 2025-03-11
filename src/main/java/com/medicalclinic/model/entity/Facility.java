@@ -1,5 +1,6 @@
 package com.medicalclinic.model.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ public class Facility {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true , nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     private String city;
@@ -38,7 +39,7 @@ public class Facility {
 
     private String postCode;
 
-    @ManyToMany(mappedBy = "facilities")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "facilities")
     private Set<Doctor> doctors = new HashSet<>();
 
     public void update(Facility updatedFacility) {
