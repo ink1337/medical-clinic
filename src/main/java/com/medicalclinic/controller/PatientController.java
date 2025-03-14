@@ -1,7 +1,7 @@
 package com.medicalclinic.controller;
 
 import com.medicalclinic.model.Password;
-import com.medicalclinic.model.dto.PatientDTO;
+import com.medicalclinic.model.dto.patient.PatientOutDTO;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +27,15 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public List<PatientDTO> getPatients() {
+    public List<PatientOutDTO> getPatients() {
         return patientService.getAll();
     }
 
     @GetMapping("/{email}")
-    public PatientDTO getPatientByEmail(@PathVariable("email") String email) {
+    public PatientOutDTO getPatientByEmail(@PathVariable("email") String email) {
         return patientService.getByEmail(email);
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addPatient(@RequestBody Patient data) {
@@ -47,7 +48,7 @@ public class PatientController {
     }
 
     @PutMapping("/{email}")
-    public PatientDTO editPatient(@PathVariable("email") String email, @RequestBody Patient data) {
+    public PatientOutDTO editPatient(@PathVariable("email") String email, @RequestBody Patient data) {
         return patientService.updateByEmail(data, email);
     }
 

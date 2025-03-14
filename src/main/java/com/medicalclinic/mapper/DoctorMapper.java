@@ -1,12 +1,15 @@
 package com.medicalclinic.mapper;
 
-import com.medicalclinic.model.dto.DoctorDTO;
+import com.medicalclinic.model.dto.doctor.DoctorInDTO;
+import com.medicalclinic.model.dto.doctor.DoctorOutDTO;
+import com.medicalclinic.model.dto.doctor.DoctorSimpleDTO;
 import com.medicalclinic.model.entity.Doctor;
 import com.medicalclinic.model.entity.Facility;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +17,15 @@ import java.util.stream.Collectors;
 public interface DoctorMapper {
 
     @Mapping(target = "facilities", source = "facilities", qualifiedByName = "mapFacilityIds")
-    DoctorDTO toDTO(Doctor source);
+    DoctorOutDTO toDTO(Doctor source);
+
+    Set<DoctorOutDTO> toDTOs(List<Doctor> source);
+
+    Doctor toEntity(DoctorInDTO source);
+
+    Doctor toEntity(DoctorSimpleDTO source);
+
+    Set<Doctor> toEntity(Set<DoctorSimpleDTO> source);
 
     @Named("mapFacilityIds")
     default Set<Long> mapFacilityIds(Set<Facility> facilities) {

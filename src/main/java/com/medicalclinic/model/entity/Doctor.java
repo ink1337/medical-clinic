@@ -1,5 +1,6 @@
 package com.medicalclinic.model.entity;
 
+import com.medicalclinic.model.dto.doctor.DoctorInDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,7 +47,7 @@ public class Doctor {
             inverseJoinColumns = @JoinColumn(name = "facility_id"))
     private Set<Facility> facilities = new HashSet<>();
 
-    public void update(Doctor updatedDoctor) {
+    public void update(DoctorInDTO updatedDoctor) {
         this.email = updatedDoctor.getEmail();
         this.password = updatedDoctor.getPassword();
         this.firstName = updatedDoctor.getFirstName();
@@ -62,9 +63,21 @@ public class Doctor {
         return id != null && id.equals((other.getId()));
     }
 
-
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", speciality='" + speciality + '\'' +
+                ", facilities=" + facilities.stream().map(Facility::getId) +
+                '}';
     }
 }

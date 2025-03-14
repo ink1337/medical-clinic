@@ -1,4 +1,4 @@
-package com.medicalclinic.model.dto;
+package com.medicalclinic.model.dto.patient;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Builder()
 @Getter
-public class PatientDTO {
+public class PatientInDTO {
     private final String email;
     private final String firstName;
     private final String lastName;

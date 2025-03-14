@@ -2,16 +2,18 @@ package com.medicalclinic.service;
 
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.DoctorMapper;
-import com.medicalclinic.model.dto.DoctorDTO;
-import com.medicalclinic.model.entity.Doctor;
+import com.medicalclinic.mapper.FacilityMapper;
+import com.medicalclinic.model.dto.PageDataDTO;
+import com.medicalclinic.model.dto.doctor.DoctorInDTO;
+import com.medicalclinic.model.dto.doctor.DoctorOutDTO;
 import com.medicalclinic.repository.DoctorRepository;
 import com.medicalclinic.repository.FacilityRepository;
 import com.medicalclinic.validator.DoctorValidator;
+import com.medicalclinic.validator.FacilityValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
@@ -22,23 +24,35 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
     private final FacilityRepository facilityRepository;
+    private final FacilityMapper facilityMapper;
+    private final FacilityValidator facilityValidator;
 
-    public List<DoctorDTO> getAll() {
-        return doctorRepository.findAll().stream()
-                .map(doctorMapper::toDTO)
-                .toList();
+    public PageDataDTO<DoctorOutDTO> getAll(Pageable pageable) {
+        var result = doctorRepository.findAll(pageable);
+        return PageDataDTO.<DoctorOutDTO>builder()
+                .data(doctorMapper.toDTOs(result.getContent()))
+                .currentPage(pageable.getPageNumber())
+                .totalElements(result.getTotalElements())
+                .totalPages(result.getTotalPages())
+                .build();
     }
 
-    public DoctorDTO getByEmail(String email) {
+    public DoctorOutDTO getByEmail(String email) {
         return doctorRepository.findByEmail(email)
                 .map(doctorMapper::toDTO)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
     }
 
     @Transactional
-    public void add(Doctor doctor) {
+    public void add(DoctorInDTO doctor) {
+        var facilities = doctor.getFacilities();
         doctorValidator.validateDoctorForPersist(doctor);
-        doctorRepository.save(doctor);
+        var entity = doctorMapper.toEntity(doctor);
+        if (!facilities.isEmpty()) {
+            facilityValidator.validateSimpleFacilities(facilities);
+            entity.setFacilities(facilityMapper.toEntity(facilities));
+        }
+        doctorRepository.save(entity);
     }
 
     @Transactional
@@ -52,7 +66,7 @@ public class DoctorService {
     }
 
     @Transactional
-    public DoctorDTO updateByEmail(Doctor data, String referencedEmail) {
+    public DoctorOutDTO updateByEmail(DoctorInDTO data, String referencedEmail) {
         var entity = doctorValidator.validateAndGetDoctorToUpdate(data, referencedEmail);
         entity.update(data);
         doctorRepository.save(entity);

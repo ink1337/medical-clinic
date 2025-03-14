@@ -1,5 +1,6 @@
 package com.medicalclinic.model.entity;
 
+import com.medicalclinic.model.dto.facility.FacilityInDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,7 +43,7 @@ public class Facility {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "facilities")
     private Set<Doctor> doctors = new HashSet<>();
 
-    public void update(Facility updatedFacility) {
+    public void update(FacilityInDTO updatedFacility) {
         this.name = updatedFacility.getName();
         this.city = updatedFacility.getCity();
         this.street = updatedFacility.getStreet();
@@ -61,6 +62,19 @@ public class Facility {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Facility{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", buildingNumber='" + buildingNumber + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", doctors=" + doctors.stream().map(Doctor::getId) +
+                '}';
     }
 }
 

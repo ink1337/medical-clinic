@@ -2,7 +2,7 @@ package com.medicalclinic.service;
 
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.PatientMapper;
-import com.medicalclinic.model.dto.PatientDTO;
+import com.medicalclinic.model.dto.patient.PatientOutDTO;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
 import com.medicalclinic.validator.PatientValidator;
@@ -21,13 +21,13 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
-    public List<PatientDTO> getAll() {
+    public List<PatientOutDTO> getAll() {
         return patientRepository.findAll().stream()
                 .map(patientMapper::toDTO)
                 .toList();
     }
 
-    public PatientDTO getByEmail(String email) {
+    public PatientOutDTO getByEmail(String email) {
         return patientRepository.findByEmail(email)
                 .map(patientMapper::toDTO)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
@@ -50,7 +50,7 @@ public class PatientService {
     }
 
     @Transactional
-    public PatientDTO updateByEmail(Patient newPatient, String referencedEmail) {
+    public PatientOutDTO updateByEmail(Patient newPatient, String referencedEmail) {
         var entity = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
         entity.update(newPatient);
         patientRepository.save(entity);

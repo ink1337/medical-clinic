@@ -1,10 +1,12 @@
 package com.medicalclinic.controller;
 
 import com.medicalclinic.model.Password;
-import com.medicalclinic.model.dto.DoctorDTO;
-import com.medicalclinic.model.entity.Doctor;
+import com.medicalclinic.model.dto.PageDataDTO;
+import com.medicalclinic.model.dto.doctor.DoctorInDTO;
+import com.medicalclinic.model.dto.doctor.DoctorOutDTO;
 import com.medicalclinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 
 @RequiredArgsConstructor
 @RestController
@@ -27,18 +27,18 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping
-    public List<DoctorDTO> getAll() {
-        return doctorService.getAll();
+    public PageDataDTO<DoctorOutDTO> getAll(Pageable pageable) {
+        return doctorService.getAll(pageable);
     }
 
     @GetMapping("/{email}")
-    public DoctorDTO getByName(@PathVariable("email") String email) {
+    public DoctorOutDTO getByName(@PathVariable("email") String email) {
         return doctorService.getByEmail(email);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody Doctor data) {
+    public void add(@RequestBody DoctorInDTO data) {
         doctorService.add(data);
     }
 
@@ -48,7 +48,7 @@ public class DoctorController {
     }
 
     @PutMapping("/{email}")
-    public DoctorDTO update(@PathVariable("email") String email, @RequestBody Doctor data) {
+    public DoctorOutDTO update(@PathVariable("email") String email, @RequestBody DoctorInDTO data) {
         return doctorService.updateByEmail(data, email);
     }
 

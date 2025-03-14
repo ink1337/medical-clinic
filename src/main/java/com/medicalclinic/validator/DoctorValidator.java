@@ -1,12 +1,15 @@
 package com.medicalclinic.validator;
 
 import com.medicalclinic.exception.ProcessingDoctorException;
+import com.medicalclinic.model.dto.doctor.DoctorInDTO;
+import com.medicalclinic.model.dto.doctor.DoctorSimpleDTO;
 import com.medicalclinic.model.entity.Doctor;
 import com.medicalclinic.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Set;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
@@ -15,7 +18,7 @@ import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 public class DoctorValidator {
     private final DoctorRepository doctorRepository;
 
-    public Doctor validateAndGetDoctorToUpdate(Doctor newDoctor, String referencedEmail) {
+    public Doctor validateAndGetDoctorToUpdate(DoctorInDTO newDoctor, String referencedEmail) {
         var newDoctorEmail = newDoctor.getEmail();
         var existingDoctor = doctorRepository.findByEmail(referencedEmail)
                 .orElseThrow(() -> new ProcessingDoctorException(getMessage("doctor.not_found", referencedEmail)));
@@ -26,9 +29,19 @@ public class DoctorValidator {
         return existingDoctor;
     }
 
-    public void validateDoctorForPersist(Doctor doctor) {
+    public void validateDoctorForPersist(DoctorInDTO doctor) {
         checkIfDoctorWithEmailExists(doctor.getEmail());
         validateNoneNullFields(doctor);
+    }
+
+    public void checkIfDoctorWithEmailExists(String email) {
+        if (doctorRepository.findByEmail(email).isPresent()) {
+            throw new ProcessingDoctorException(getMessage("doctor.already_exists", email));
+        }
+    }
+
+    public void validateSimpleDoctors(Set<DoctorSimpleDTO> doctors) {
+        doctors.forEach(this::validateNoneNullFields);
     }
 
     private void validateIfEmailIsValid(String email) {
@@ -37,7 +50,7 @@ public class DoctorValidator {
         }
     }
 
-    private void validateNoneNullFields(Doctor doctor) {
+    private void validateNoneNullFields(DoctorInDTO doctor) {
         if (doctor.getEmail() == null
                 || doctor.getPassword() == null
                 || doctor.getFirstName() == null
@@ -47,9 +60,13 @@ public class DoctorValidator {
         }
     }
 
-    public void checkIfDoctorWithEmailExists(String email) {
-        if (doctorRepository.findByEmail(email).isPresent()) {
-            throw new ProcessingDoctorException(getMessage("doctor.already_exists", email));
+    private void validateNoneNullFields(DoctorSimpleDTO doctor) {
+        if (doctor.getEmail() == null
+                || doctor.getPassword() == null
+                || doctor.getFirstName() == null
+                || doctor.getLastName() == null
+                || doctor.getSpeciality() == null) {
+            throw new ProcessingDoctorException(getMessage("doctor.all_field_must_be_set", doctor.getEmail()));
         }
     }
 }
