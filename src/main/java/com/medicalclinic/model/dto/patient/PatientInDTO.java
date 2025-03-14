@@ -11,6 +11,7 @@ public class PatientInDTO {
     private final String email;
     private final String firstName;
     private final String lastName;
+    private String password;
     private final LocalDate birthday;
     private final String idCardNo;
     private final String phoneNumber;

@@ -1,6 +1,6 @@
 package com.medicalclinic.controller;
 
-import com.medicalclinic.model.dto.PageDataDTO;
+import com.medicalclinic.model.dto.PageableDataDTO;
 import com.medicalclinic.model.dto.facility.FacilityInDTO;
 import com.medicalclinic.model.dto.facility.FacilityOutDTO;
 import com.medicalclinic.service.FacilityService;
@@ -25,7 +25,7 @@ public class FacilityController {
     private final FacilityService facilityService;
 
     @GetMapping
-    public PageDataDTO<FacilityOutDTO> getAll(Pageable pageable) {
+    public PageableDataDTO<FacilityOutDTO> getAll(Pageable pageable) {
         return facilityService.getAll(pageable);
     }
 

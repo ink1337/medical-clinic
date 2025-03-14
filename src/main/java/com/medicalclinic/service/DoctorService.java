@@ -3,7 +3,7 @@ package com.medicalclinic.service;
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.DoctorMapper;
 import com.medicalclinic.mapper.FacilityMapper;
-import com.medicalclinic.model.dto.PageDataDTO;
+import com.medicalclinic.model.dto.PageableDataDTO;
 import com.medicalclinic.model.dto.doctor.DoctorInDTO;
 import com.medicalclinic.model.dto.doctor.DoctorOutDTO;
 import com.medicalclinic.repository.DoctorRepository;
@@ -27,9 +27,9 @@ public class DoctorService {
     private final FacilityMapper facilityMapper;
     private final FacilityValidator facilityValidator;
 
-    public PageDataDTO<DoctorOutDTO> getAll(Pageable pageable) {
+    public PageableDataDTO<DoctorOutDTO> getAll(Pageable pageable) {
         var result = doctorRepository.findAll(pageable);
-        return PageDataDTO.<DoctorOutDTO>builder()
+        return PageableDataDTO.<DoctorOutDTO>builder()
                 .data(doctorMapper.toDTOs(result.getContent()))
                 .currentPage(pageable.getPageNumber())
                 .totalElements(result.getTotalElements())

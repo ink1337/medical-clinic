@@ -1,7 +1,7 @@
 package com.medicalclinic.controller;
 
 import com.medicalclinic.model.Password;
-import com.medicalclinic.model.dto.PageDataDTO;
+import com.medicalclinic.model.dto.PageableDataDTO;
 import com.medicalclinic.model.dto.doctor.DoctorInDTO;
 import com.medicalclinic.model.dto.doctor.DoctorOutDTO;
 import com.medicalclinic.service.DoctorService;
@@ -27,7 +27,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping
-    public PageDataDTO<DoctorOutDTO> getAll(Pageable pageable) {
+    public PageableDataDTO<DoctorOutDTO> getAll(Pageable pageable) {
         return doctorService.getAll(pageable);
     }
 

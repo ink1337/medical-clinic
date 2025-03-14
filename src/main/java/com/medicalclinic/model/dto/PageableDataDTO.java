@@ -9,7 +9,7 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @Builder
-public class PageDataDTO<T> {
+public class PageableDataDTO<T> {
     Set<T> data;
     private int totalPages;
     private int currentPage;

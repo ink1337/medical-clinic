@@ -1,5 +1,6 @@
 package com.medicalclinic.model.entity;
 
+import com.medicalclinic.model.dto.patient.PatientInDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,7 +31,7 @@ public class Patient {
     private String idCardNo;
     private String phoneNumber;
 
-    public void update(Patient patientData) {
+    public void update(PatientInDTO patientData) {
         email = patientData.getEmail();
         password = patientData.getPassword();
         idCardNo = patientData.getIdCardNo();

@@ -1,10 +1,12 @@
 package com.medicalclinic.controller;
 
 import com.medicalclinic.model.Password;
+import com.medicalclinic.model.dto.PageableDataDTO;
+import com.medicalclinic.model.dto.patient.PatientInDTO;
 import com.medicalclinic.model.dto.patient.PatientOutDTO;
-import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.service.PatientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 
 @RequiredArgsConstructor
 @RestController
@@ -27,8 +27,8 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public List<PatientOutDTO> getPatients() {
-        return patientService.getAll();
+    public PageableDataDTO<PatientOutDTO> getPatients(Pageable pageable) {
+        return patientService.getAll(pageable);
     }
 
     @GetMapping("/{email}")
@@ -38,7 +38,7 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPatient(@RequestBody Patient data) {
+    public void addPatient(@RequestBody PatientInDTO data) {
         patientService.add(data);
     }
 
@@ -48,7 +48,7 @@ public class PatientController {
     }
 
     @PutMapping("/{email}")
-    public PatientOutDTO editPatient(@PathVariable("email") String email, @RequestBody Patient data) {
+    public PatientOutDTO editPatient(@PathVariable("email") String email, @RequestBody PatientInDTO data) {
         return patientService.updateByEmail(data, email);
     }
 

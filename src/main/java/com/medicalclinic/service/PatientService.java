@@ -2,15 +2,15 @@ package com.medicalclinic.service;
 
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.PatientMapper;
+import com.medicalclinic.model.dto.PageableDataDTO;
+import com.medicalclinic.model.dto.patient.PatientInDTO;
 import com.medicalclinic.model.dto.patient.PatientOutDTO;
-import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
 import com.medicalclinic.validator.PatientValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
@@ -21,10 +21,14 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
-    public List<PatientOutDTO> getAll() {
-        return patientRepository.findAll().stream()
-                .map(patientMapper::toDTO)
-                .toList();
+    public PageableDataDTO<PatientOutDTO> getAll(Pageable pageable) {
+        var result = patientRepository.findAll(pageable);
+        return PageableDataDTO.<PatientOutDTO>builder()
+                .data(patientMapper.toDTOs(result.getContent()))
+                .totalPages(result.getTotalPages())
+                .totalElements(result.getTotalElements())
+                .currentPage(pageable.getPageNumber())
+                .build();
     }
 
     public PatientOutDTO getByEmail(String email) {
@@ -34,9 +38,9 @@ public class PatientService {
     }
 
     @Transactional
-    public void add(Patient patient) {
+    public void add(PatientInDTO patient) {
         patientValidator.validatePatientForPersist(patient);
-        patientRepository.save(patient);
+        patientRepository.save(patientMapper.toEnity(patient));
     }
 
     @Transactional
@@ -50,7 +54,7 @@ public class PatientService {
     }
 
     @Transactional
-    public PatientOutDTO updateByEmail(Patient newPatient, String referencedEmail) {
+    public PatientOutDTO updateByEmail(PatientInDTO newPatient, String referencedEmail) {
         var entity = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
         entity.update(newPatient);
         patientRepository.save(entity);
