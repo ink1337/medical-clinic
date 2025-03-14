@@ -1,7 +1,7 @@
 package com.medicalclinic.mapper;
 
-import com.medicalclinic.model.dto.patient.PatientInDTO;
-import com.medicalclinic.model.dto.patient.PatientOutDTO;
+import com.medicalclinic.model.dto.patient.PatientCommandDTO;
+import com.medicalclinic.model.dto.patient.PatientDTO;
 import com.medicalclinic.model.entity.Patient;
 import org.mapstruct.Mapper;
 
@@ -11,8 +11,8 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface PatientMapper {
 
-    PatientOutDTO toDTO(Patient source);
-    Set<PatientOutDTO> toDTOs(List<Patient> source);
+    PatientDTO toDTO(Patient source);
+    Set<PatientDTO> toDTOs(List<Patient> source);
 
-    Patient toEnity(PatientInDTO patient);
+    Patient toEnity(PatientCommandDTO patient);
 }

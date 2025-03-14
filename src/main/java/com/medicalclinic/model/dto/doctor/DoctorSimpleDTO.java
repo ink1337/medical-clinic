@@ -2,10 +2,10 @@ package com.medicalclinic.model.dto.doctor;
 
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Builder()
-@Getter
+@Builder
+@Data
 public class DoctorSimpleDTO {
     private String email;
     private String password;

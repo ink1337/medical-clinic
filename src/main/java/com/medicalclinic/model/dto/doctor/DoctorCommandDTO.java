@@ -6,9 +6,9 @@ import lombok.Getter;
 
 import java.util.Set;
 
-@Builder()
+@Builder
 @Getter
-public class DoctorInDTO {
+public class DoctorCommandDTO {
 
     private String email;
     private String password;

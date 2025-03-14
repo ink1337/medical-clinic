@@ -2,13 +2,13 @@ package com.medicalclinic.model.dto.doctor;
 
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.Set;
 
-@Builder()
-@Getter
-public class DoctorOutDTO {
+@Builder
+@Data
+public class DoctorDTO {
     private String email;
     private String password;
     private String firstName;

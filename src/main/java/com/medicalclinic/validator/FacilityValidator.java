@@ -1,7 +1,7 @@
 package com.medicalclinic.validator;
 
 import com.medicalclinic.exception.ProcessingFacilityException;
-import com.medicalclinic.model.dto.facility.FacilityInDTO;
+import com.medicalclinic.model.dto.facility.FacilityCommandDTO;
 import com.medicalclinic.model.dto.facility.FacilitySimpleDTO;
 import com.medicalclinic.model.entity.Facility;
 import com.medicalclinic.repository.FacilityRepository;
@@ -18,7 +18,7 @@ import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 public class FacilityValidator {
     private final FacilityRepository facilityRepository;
 
-    public Facility validateAndGetFacilityToUpdate(FacilityInDTO newFacility, String referencedName) {
+    public Facility validateAndGetFacilityToUpdate(FacilityCommandDTO newFacility, String referencedName) {
         var newFacilityName = newFacility.getName();
         var existingFacility = facilityRepository.findByName(referencedName)
                 .orElseThrow(() -> new ProcessingFacilityException(getMessage("facility.not_found", referencedName)));
@@ -29,7 +29,7 @@ public class FacilityValidator {
         return existingFacility;
     }
 
-    public void validateFacilityForPersist(FacilityInDTO facility) {
+    public void validateFacilityForPersist(FacilityCommandDTO facility) {
         checkIfFacilityWithNameExists(facility.getName());
         validateNoneNullFields(facility);
     }
@@ -50,7 +50,7 @@ public class FacilityValidator {
         }
     }
 
-    private void validateNoneNullFields(FacilityInDTO facility) {
+    private void validateNoneNullFields(FacilityCommandDTO facility) {
         if (facility.getName() == null
                 || facility.getCity() == null
                 || facility.getStreet() == null

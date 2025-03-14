@@ -1,6 +1,6 @@
 package com.medicalclinic.model.entity;
 
-import com.medicalclinic.model.dto.patient.PatientInDTO;
+import com.medicalclinic.model.dto.patient.PatientCommandDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
@@ -31,7 +31,7 @@ public class Patient {
     private String idCardNo;
     private String phoneNumber;
 
-    public void update(PatientInDTO patientData) {
+    public void update(PatientCommandDTO patientData) {
         email = patientData.getEmail();
         password = patientData.getPassword();
         idCardNo = patientData.getIdCardNo();

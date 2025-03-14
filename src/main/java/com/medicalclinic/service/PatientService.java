@@ -3,8 +3,8 @@ package com.medicalclinic.service;
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.PatientMapper;
 import com.medicalclinic.model.dto.PageableDataDTO;
-import com.medicalclinic.model.dto.patient.PatientInDTO;
-import com.medicalclinic.model.dto.patient.PatientOutDTO;
+import com.medicalclinic.model.dto.patient.PatientCommandDTO;
+import com.medicalclinic.model.dto.patient.PatientDTO;
 import com.medicalclinic.repository.PatientRepository;
 import com.medicalclinic.validator.PatientValidator;
 import lombok.RequiredArgsConstructor;
@@ -21,36 +21,33 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
-    public PageableDataDTO<PatientOutDTO> getAll(Pageable pageable) {
+    public PageableDataDTO<PatientDTO> getAll(Pageable pageable) {
         var result = patientRepository.findAll(pageable);
         return PageableDataDTO.from(patientMapper.toDTOs(result.getContent()), result, pageable);
 
     }
 
-    public PatientOutDTO getByEmail(String email) {
+    public PatientDTO getByEmail(String email) {
         return patientRepository.findByEmail(email)
                 .map(patientMapper::toDTO)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
     }
 
     @Transactional
-    public void add(PatientInDTO patient) {
+    public void add(PatientCommandDTO patient) {
         patientValidator.validatePatientForPersist(patient);
         patientRepository.save(patientMapper.toEnity(patient));
     }
 
     @Transactional
-    public boolean deleteByEmail(String email) {
-        var patientOptional = patientRepository.findByEmail(email);
-        if (patientOptional.isPresent()) {
-            patientRepository.delete(patientOptional.get());
-            return true;
-        }
-        return false;
+    public void deleteByEmail(String email) {
+        var patient = patientRepository.findByEmail(email)
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+        patientRepository.delete(patient);
     }
 
     @Transactional
-    public PatientOutDTO updateByEmail(PatientInDTO newPatient, String referencedEmail) {
+    public PatientDTO updateByEmail(PatientCommandDTO newPatient, String referencedEmail) {
         var entity = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
         entity.update(newPatient);
         patientRepository.save(entity);

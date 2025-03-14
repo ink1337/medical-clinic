@@ -5,9 +5,9 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
-@Builder()
+@Builder
 @Getter
-public class PatientInDTO {
+public class PatientCommandDTO {
     private final String email;
     private final String firstName;
     private final String lastName;

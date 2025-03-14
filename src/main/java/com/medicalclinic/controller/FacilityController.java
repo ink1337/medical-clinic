@@ -1,8 +1,8 @@
 package com.medicalclinic.controller;
 
 import com.medicalclinic.model.dto.PageableDataDTO;
-import com.medicalclinic.model.dto.facility.FacilityInDTO;
-import com.medicalclinic.model.dto.facility.FacilityOutDTO;
+import com.medicalclinic.model.dto.facility.FacilityCommandDTO;
+import com.medicalclinic.model.dto.facility.FacilityDTO;
 import com.medicalclinic.service.FacilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/facilities")
@@ -25,28 +24,28 @@ public class FacilityController {
     private final FacilityService facilityService;
 
     @GetMapping
-    public PageableDataDTO<FacilityOutDTO> getAll(Pageable pageable) {
+    public PageableDataDTO<FacilityDTO> getAll(Pageable pageable) {
         return facilityService.getAll(pageable);
     }
 
     @GetMapping("/{name}")
-    public FacilityOutDTO getByName(@PathVariable("name") String name) {
+    public FacilityDTO getByName(@PathVariable("name") String name) {
         return facilityService.getByName(name);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody FacilityInDTO data) {
+    public void add(@RequestBody FacilityCommandDTO data) {
         facilityService.add(data);
     }
 
     @DeleteMapping("/{name}")
-    public boolean deleteByEmail(@PathVariable("name") String name) {
-        return facilityService.deleteByName(name);
+    public void deleteByName(@PathVariable("name") String name) {
+        facilityService.deleteByName(name);
     }
 
     @PutMapping("/{name}")
-    public FacilityOutDTO update(@PathVariable("name") String name, @RequestBody FacilityInDTO data) {
-        return facilityService.updateByName(data, name);
+    public FacilityDTO update(@PathVariable("name") String name, @RequestBody FacilityCommandDTO commandDTO) {
+        return facilityService.updateByName(commandDTO, name);
     }
 }

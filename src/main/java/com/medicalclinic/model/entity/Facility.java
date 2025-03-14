@@ -1,6 +1,6 @@
 package com.medicalclinic.model.entity;
 
-import com.medicalclinic.model.dto.facility.FacilityInDTO;
+import com.medicalclinic.model.dto.facility.FacilityCommandDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Facility {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -43,7 +43,7 @@ public class Facility {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "facilities")
     private Set<Doctor> doctors = new HashSet<>();
 
-    public void update(FacilityInDTO updatedFacility) {
+    public void update(FacilityCommandDTO updatedFacility) {
         this.name = updatedFacility.getName();
         this.city = updatedFacility.getCity();
         this.street = updatedFacility.getStreet();

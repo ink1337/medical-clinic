@@ -1,6 +1,6 @@
 package com.medicalclinic.model.entity;
 
-import com.medicalclinic.model.dto.doctor.DoctorInDTO;
+import com.medicalclinic.model.dto.doctor.DoctorCommandDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +27,7 @@ import java.util.Set;
 public class Doctor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
@@ -47,7 +47,7 @@ public class Doctor {
             inverseJoinColumns = @JoinColumn(name = "facility_id"))
     private Set<Facility> facilities = new HashSet<>();
 
-    public void update(DoctorInDTO updatedDoctor) {
+    public void update(DoctorCommandDTO updatedDoctor) {
         this.email = updatedDoctor.getEmail();
         this.password = updatedDoctor.getPassword();
         this.firstName = updatedDoctor.getFirstName();

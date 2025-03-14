@@ -1,10 +1,10 @@
 package com.medicalclinic.model.dto.facility;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Builder()
-@Getter
+@Builder
+@Data
 public class FacilitySimpleDTO {
     private String name;
     private String city;

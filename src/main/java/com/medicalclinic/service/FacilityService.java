@@ -4,8 +4,8 @@ import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.DoctorMapper;
 import com.medicalclinic.mapper.FacilityMapper;
 import com.medicalclinic.model.dto.PageableDataDTO;
-import com.medicalclinic.model.dto.facility.FacilityInDTO;
-import com.medicalclinic.model.dto.facility.FacilityOutDTO;
+import com.medicalclinic.model.dto.facility.FacilityCommandDTO;
+import com.medicalclinic.model.dto.facility.FacilityDTO;
 import com.medicalclinic.repository.FacilityRepository;
 import com.medicalclinic.validator.DoctorValidator;
 import com.medicalclinic.validator.FacilityValidator;
@@ -25,20 +25,20 @@ public class FacilityService {
     private final DoctorValidator doctorValidator;
     private final DoctorMapper doctorMapper;
 
-    public PageableDataDTO<FacilityOutDTO> getAll(Pageable pageable) {
+    public PageableDataDTO<FacilityDTO> getAll(Pageable pageable) {
         var result = facilityRepository.findAll(pageable);
         return PageableDataDTO.from(facilityMapper.toDTOs(result.getContent()), result, pageable);
 
     }
 
-    public FacilityOutDTO getByName(String email) {
+    public FacilityDTO getByName(String email) {
         return facilityRepository.findByName(email)
                 .map(facilityMapper::toDTO)
-                .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("facility.not_found", email)));
     }
 
     @Transactional
-    public void add(FacilityInDTO facility) {
+    public void add(FacilityCommandDTO facility) {
         var doctors = facility.getDoctors();
         facilityValidator.validateFacilityForPersist(facility);
         var entity = facilityMapper.toEntity(facility);
@@ -50,17 +50,14 @@ public class FacilityService {
     }
 
     @Transactional
-    public boolean deleteByName(String email) {
-        var patientOptional = facilityRepository.findByName(email);
-        if (patientOptional.isPresent()) {
-            facilityRepository.delete(patientOptional.get());
-            return true;
-        }
-        return false;
+    public void deleteByName(String name) {
+        var facility = facilityRepository.findByName(name)
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("facility.not_found", name)));
+        facilityRepository.delete(facility);
     }
 
     @Transactional
-    public FacilityOutDTO updateByName(FacilityInDTO data, String referencedName) {
+    public FacilityDTO updateByName(FacilityCommandDTO data, String referencedName) {
         var entity = facilityValidator.validateAndGetFacilityToUpdate(data, referencedName);
         entity.update(data);
         facilityRepository.save(entity);
