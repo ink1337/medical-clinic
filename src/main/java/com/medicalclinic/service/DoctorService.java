@@ -29,13 +29,9 @@ public class DoctorService {
 
     public PageableDataDTO<DoctorOutDTO> getAll(Pageable pageable) {
         var result = doctorRepository.findAll(pageable);
-        return PageableDataDTO.<DoctorOutDTO>builder()
-                .data(doctorMapper.toDTOs(result.getContent()))
-                .currentPage(pageable.getPageNumber())
-                .totalElements(result.getTotalElements())
-                .totalPages(result.getTotalPages())
-                .build();
+        return PageableDataDTO.from(doctorMapper.toDTOs(result.getContent()), result, pageable);
     }
+
 
     public DoctorOutDTO getByEmail(String email) {
         return doctorRepository.findByEmail(email)

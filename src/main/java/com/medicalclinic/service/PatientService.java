@@ -23,12 +23,8 @@ public class PatientService {
 
     public PageableDataDTO<PatientOutDTO> getAll(Pageable pageable) {
         var result = patientRepository.findAll(pageable);
-        return PageableDataDTO.<PatientOutDTO>builder()
-                .data(patientMapper.toDTOs(result.getContent()))
-                .totalPages(result.getTotalPages())
-                .totalElements(result.getTotalElements())
-                .currentPage(pageable.getPageNumber())
-                .build();
+        return PageableDataDTO.from(patientMapper.toDTOs(result.getContent()), result, pageable);
+
     }
 
     public PatientOutDTO getByEmail(String email) {

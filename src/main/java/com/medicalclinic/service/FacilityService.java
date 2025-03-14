@@ -27,12 +27,8 @@ public class FacilityService {
 
     public PageableDataDTO<FacilityOutDTO> getAll(Pageable pageable) {
         var result = facilityRepository.findAll(pageable);
-        return PageableDataDTO.<FacilityOutDTO>builder()
-                .data(facilityMapper.toDTOs(result.getContent()))
-                .totalPages(result.getTotalPages())
-                .totalElements(result.getTotalElements())
-                .currentPage(pageable.getPageNumber())
-                .build();
+        return PageableDataDTO.from(facilityMapper.toDTOs(result.getContent()), result, pageable);
+
     }
 
     public FacilityOutDTO getByName(String email) {
