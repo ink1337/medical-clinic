@@ -1,45 +1,64 @@
 package com.medicalclinic.service;
 
+import com.medicalclinic.exception.ProcessingPatientException;
+import com.medicalclinic.mapper.PatientMapper;
+import com.medicalclinic.model.dto.PageableDataDTO;
+import com.medicalclinic.model.dto.patient.PatientCommandDTO;
+import com.medicalclinic.model.dto.patient.PatientDTO;
+import com.medicalclinic.repository.PatientRepository;
+import com.medicalclinic.validator.PatientValidator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
-import java.util.List;
-
-import com.medicalclinic.exception.ProcessingPatientException;
-import com.medicalclinic.model.Patient;
-import com.medicalclinic.repository.PatientRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class PatientService {
+    private final PatientValidator patientValidator;
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
 
-    public List<Patient> getPatients() {
-        return patientRepository.listAll();
+    public PageableDataDTO<PatientDTO> getAll(Pageable pageable) {
+        var result = patientRepository.findAll(pageable);
+        return PageableDataDTO.from(patientMapper.toDTOs(result.getContent()), result, pageable);
+
     }
 
-    public Patient getPatientByEmail(String email) {
-        return patientRepository.findPatientByEmail(email)
+    public PatientDTO getByEmail(String email) {
+        return patientRepository.findByEmail(email)
+                .map(patientMapper::toDTO)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
     }
 
-    public void addPatient(Patient patient) {
-        patientRepository.persist(patient);
+    @Transactional
+    public void add(PatientCommandDTO patient) {
+        patientValidator.validatePatientForPersist(patient);
+        patientRepository.save(patientMapper.toEnity(patient));
     }
 
-    public boolean deletePatientByEmail(String email) {
-        return patientRepository.deletePatientByEmail(email);
+    @Transactional
+    public void deleteByEmail(String email) {
+        var patient = patientRepository.findByEmail(email)
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+        patientRepository.delete(patient);
     }
 
-    public boolean updatePatientByEmail(Patient newPatient, String referencedEmail) {
-        return patientRepository.updateByEmail(newPatient, referencedEmail);
+    @Transactional
+    public PatientDTO updateByEmail(PatientCommandDTO newPatient, String referencedEmail) {
+        var entity = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
+        entity.update(newPatient);
+        patientRepository.save(entity);
+        return patientMapper.toDTO(entity);
     }
 
+    @Transactional
     public boolean changePasswordByEmail(String email, String password) {
-        var patient = Patient.builder()
-                .password(password)
-                .build();
-        return patientRepository.updateByEmail(patient, email);
+        var existingPatient = patientRepository.findByEmail(email)
+                .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+        existingPatient.setPassword(password);
+        return true;
     }
 }

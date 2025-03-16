@@ -1,13 +1,13 @@
 package com.medicalclinic.exception;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static java.util.ResourceBundle.getBundle;
-
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DictionaryHandler {
