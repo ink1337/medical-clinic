@@ -16,6 +16,6 @@ public final class DictionaryHandler {
     public static String getMessage(String key, Object... params) {
         ResourceBundle resourceBundle = getBundle(PATH_TO_ERRORS, Locale.getDefault());
         var message = resourceBundle.getString(key);
-        return MessageFormat.format(message, params); //todo: dla You cant change idCardNo, email: {0}. nie działa
+        return MessageFormat.format(message, params);
     }
 }
