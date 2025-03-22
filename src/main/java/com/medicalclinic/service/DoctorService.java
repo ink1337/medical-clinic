@@ -4,10 +4,11 @@ import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.DoctorMapper;
 import com.medicalclinic.mapper.FacilityMapper;
 import com.medicalclinic.model.dto.PageableDataDTO;
+import com.medicalclinic.model.dto.doctor.DoctorCreateCommand;
 import com.medicalclinic.model.dto.doctor.DoctorDTO;
-import com.medicalclinic.model.dto.doctor.DoctorCommandDTO;
 import com.medicalclinic.repository.DoctorRepository;
 import com.medicalclinic.repository.FacilityRepository;
+import com.medicalclinic.repository.VisitRepository;
 import com.medicalclinic.validator.DoctorValidator;
 import com.medicalclinic.validator.FacilityValidator;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class DoctorService {
     private final FacilityRepository facilityRepository;
     private final FacilityMapper facilityMapper;
     private final FacilityValidator facilityValidator;
+    private final VisitRepository visitRepository;
 
     public PageableDataDTO<DoctorDTO> getAll(Pageable pageable) {
         var result = doctorRepository.findAll(pageable);
@@ -40,7 +42,7 @@ public class DoctorService {
     }
 
     @Transactional
-    public void add(DoctorCommandDTO doctor) {
+    public void add(DoctorCreateCommand doctor) {
         var facilities = doctor.getFacilities();
         doctorValidator.validateDoctorForPersist(doctor);
         var entity = doctorMapper.toEntity(doctor);
@@ -55,11 +57,12 @@ public class DoctorService {
     public void deleteByEmail(String email) {
         var doctor = doctorRepository.findByEmail(email)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("doctor.not_found", email)));
+        visitRepository.detachDoctorFromVisits(doctor);
         doctorRepository.delete(doctor);
     }
 
     @Transactional
-    public DoctorDTO updateByEmail(DoctorCommandDTO data, String referencedEmail) {
+    public DoctorDTO updateByEmail(DoctorCreateCommand data, String referencedEmail) {
         var entity = doctorValidator.validateAndGetDoctorToUpdate(data, referencedEmail);
         entity.update(data);
         doctorRepository.save(entity);

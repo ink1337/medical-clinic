@@ -2,22 +2,13 @@ package com.medicalclinic.controller;
 
 import com.medicalclinic.model.Password;
 import com.medicalclinic.model.dto.PageableDataDTO;
-import com.medicalclinic.model.dto.doctor.DoctorCommandDTO;
+import com.medicalclinic.model.dto.doctor.DoctorCreateCommand;
 import com.medicalclinic.model.dto.doctor.DoctorDTO;
 import com.medicalclinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,7 +28,7 @@ public class DoctorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody DoctorCommandDTO data) {
+    public void add(@RequestBody DoctorCreateCommand data) {
         doctorService.add(data);
     }
 
@@ -47,7 +38,7 @@ public class DoctorController {
     }
 
     @PutMapping("/{email}")
-    public DoctorDTO update(@PathVariable("email") String email, @RequestBody DoctorCommandDTO commandDTO) {
+    public DoctorDTO update(@PathVariable("email") String email, @RequestBody DoctorCreateCommand commandDTO) {
         return doctorService.updateByEmail(commandDTO, email);
     }
 

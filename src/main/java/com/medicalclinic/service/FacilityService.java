@@ -4,7 +4,7 @@ import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.DoctorMapper;
 import com.medicalclinic.mapper.FacilityMapper;
 import com.medicalclinic.model.dto.PageableDataDTO;
-import com.medicalclinic.model.dto.facility.FacilityCommandDTO;
+import com.medicalclinic.model.dto.facility.FacilityCreateCommand;
 import com.medicalclinic.model.dto.facility.FacilityDTO;
 import com.medicalclinic.repository.FacilityRepository;
 import com.medicalclinic.validator.DoctorValidator;
@@ -38,7 +38,7 @@ public class FacilityService {
     }
 
     @Transactional
-    public void add(FacilityCommandDTO facility) {
+    public void add(FacilityCreateCommand facility) {
         var doctors = facility.getDoctors();
         facilityValidator.validateFacilityForPersist(facility);
         var entity = facilityMapper.toEntity(facility);
@@ -57,7 +57,7 @@ public class FacilityService {
     }
 
     @Transactional
-    public FacilityDTO updateByName(FacilityCommandDTO data, String referencedName) {
+    public FacilityDTO updateByName(FacilityCreateCommand data, String referencedName) {
         var entity = facilityValidator.validateAndGetFacilityToUpdate(data, referencedName);
         entity.update(data);
         facilityRepository.save(entity);

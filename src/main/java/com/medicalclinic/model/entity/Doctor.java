@@ -1,21 +1,14 @@
 package com.medicalclinic.model.entity;
 
-import com.medicalclinic.model.dto.doctor.DoctorCommandDTO;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import com.medicalclinic.model.dto.doctor.DoctorCreateCommand;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -47,7 +40,10 @@ public class Doctor {
             inverseJoinColumns = @JoinColumn(name = "facility_id"))
     private Set<Facility> facilities = new HashSet<>();
 
-    public void update(DoctorCommandDTO updatedDoctor) {
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    List<Visit> visits;
+
+    public void update(DoctorCreateCommand updatedDoctor) {
         this.email = updatedDoctor.getEmail();
         this.password = updatedDoctor.getPassword();
         this.firstName = updatedDoctor.getFirstName();

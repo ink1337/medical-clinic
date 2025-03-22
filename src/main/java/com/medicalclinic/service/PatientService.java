@@ -3,9 +3,10 @@ package com.medicalclinic.service;
 import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.mapper.PatientMapper;
 import com.medicalclinic.model.dto.PageableDataDTO;
-import com.medicalclinic.model.dto.patient.PatientCommandDTO;
+import com.medicalclinic.model.dto.patient.PatientCreateCommand;
 import com.medicalclinic.model.dto.patient.PatientDTO;
 import com.medicalclinic.repository.PatientRepository;
+import com.medicalclinic.repository.VisitRepository;
 import com.medicalclinic.validator.PatientValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ public class PatientService {
     private final PatientValidator patientValidator;
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final VisitRepository visitRepository;
 
     public PageableDataDTO<PatientDTO> getAll(Pageable pageable) {
         var result = patientRepository.findAll(pageable);
@@ -34,20 +36,21 @@ public class PatientService {
     }
 
     @Transactional
-    public void add(PatientCommandDTO patient) {
+    public void add(PatientCreateCommand patient) {
         patientValidator.validatePatientForPersist(patient);
-        patientRepository.save(patientMapper.toEnity(patient));
+        patientRepository.save(patientMapper.toEntity(patient));
     }
 
     @Transactional
     public void deleteByEmail(String email) {
         var patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", email)));
+        visitRepository.detachPatientFromVisits(patient);
         patientRepository.delete(patient);
     }
 
     @Transactional
-    public PatientDTO updateByEmail(PatientCommandDTO newPatient, String referencedEmail) {
+    public PatientDTO updateByEmail(PatientCreateCommand newPatient, String referencedEmail) {
         var entity = patientValidator.validateAndGetPatientToUpdate(newPatient, referencedEmail);
         entity.update(newPatient);
         patientRepository.save(entity);

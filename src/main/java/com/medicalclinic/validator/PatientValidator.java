@@ -1,7 +1,7 @@
 package com.medicalclinic.validator;
 
 import com.medicalclinic.exception.ProcessingPatientException;
-import com.medicalclinic.model.dto.patient.PatientCommandDTO;
+import com.medicalclinic.model.dto.patient.PatientCreateCommand;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 public class PatientValidator {
     private final PatientRepository patientRepository;
 
-    public Patient validateAndGetPatientToUpdate(PatientCommandDTO newPatient, String referencedEmail) {
+    public Patient validateAndGetPatientToUpdate(PatientCreateCommand newPatient, String referencedEmail) {
         var newPatientEmail = newPatient.getEmail();
         var existingPatient = patientRepository.findByEmail(referencedEmail)
                 .orElseThrow(() -> new ProcessingPatientException(getMessage("patient.not_found", referencedEmail)));
@@ -31,7 +31,7 @@ public class PatientValidator {
     }
 
 
-    public void validatePatientForPersist(PatientCommandDTO patient) {
+    public void validatePatientForPersist(PatientCreateCommand patient) {
         checkIfPatientWithEmailExists(patient.getEmail());
         validateNoneNullFields(patient);
     }
@@ -42,7 +42,7 @@ public class PatientValidator {
         }
     }
 
-    private void validateNoneNullFields(PatientCommandDTO patient) {
+    private void validateNoneNullFields(PatientCreateCommand patient) {
         if (patient.getEmail() == null
                 || patient.getPassword() == null
                 || patient.getIdCardNo() == null

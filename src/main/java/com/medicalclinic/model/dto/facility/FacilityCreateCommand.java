@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Builder
 @Getter
-public class FacilityCommandDTO {
+public class FacilityCreateCommand {
     private String name;
     private String city;
     private String street;

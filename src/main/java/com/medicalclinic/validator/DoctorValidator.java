@@ -1,7 +1,7 @@
 package com.medicalclinic.validator;
 
 import com.medicalclinic.exception.ProcessingDoctorException;
-import com.medicalclinic.model.dto.doctor.DoctorCommandDTO;
+import com.medicalclinic.model.dto.doctor.DoctorCreateCommand;
 import com.medicalclinic.model.dto.doctor.DoctorSimpleDTO;
 import com.medicalclinic.model.entity.Doctor;
 import com.medicalclinic.repository.DoctorRepository;
@@ -18,7 +18,7 @@ import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 public class DoctorValidator {
     private final DoctorRepository doctorRepository;
 
-    public Doctor validateAndGetDoctorToUpdate(DoctorCommandDTO newDoctor, String referencedEmail) {
+    public Doctor validateAndGetDoctorToUpdate(DoctorCreateCommand newDoctor, String referencedEmail) {
         var newDoctorEmail = newDoctor.getEmail();
         var existingDoctor = doctorRepository.findByEmail(referencedEmail)
                 .orElseThrow(() -> new ProcessingDoctorException(getMessage("doctor.not_found", referencedEmail)));
@@ -29,7 +29,7 @@ public class DoctorValidator {
         return existingDoctor;
     }
 
-    public void validateDoctorForPersist(DoctorCommandDTO doctor) {
+    public void validateDoctorForPersist(DoctorCreateCommand doctor) {
         checkIfDoctorWithEmailExists(doctor.getEmail());
         validateNoneNullFields(doctor);
     }
@@ -50,7 +50,7 @@ public class DoctorValidator {
         }
     }
 
-    private void validateNoneNullFields(DoctorCommandDTO doctor) {
+    private void validateNoneNullFields(DoctorCreateCommand doctor) {
         if (doctor.getEmail() == null
                 || doctor.getPassword() == null
                 || doctor.getFirstName() == null

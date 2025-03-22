@@ -1,21 +1,13 @@
 package com.medicalclinic.controller;
 
 import com.medicalclinic.model.dto.PageableDataDTO;
-import com.medicalclinic.model.dto.facility.FacilityCommandDTO;
+import com.medicalclinic.model.dto.facility.FacilityCreateCommand;
 import com.medicalclinic.model.dto.facility.FacilityDTO;
 import com.medicalclinic.service.FacilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,7 +27,7 @@ public class FacilityController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody FacilityCommandDTO data) {
+    public void add(@RequestBody FacilityCreateCommand data) {
         facilityService.add(data);
     }
 
@@ -45,7 +37,7 @@ public class FacilityController {
     }
 
     @PutMapping("/{name}")
-    public FacilityDTO update(@PathVariable("name") String name, @RequestBody FacilityCommandDTO commandDTO) {
+    public FacilityDTO update(@PathVariable("name") String name, @RequestBody FacilityCreateCommand commandDTO) {
         return facilityService.updateByName(commandDTO, name);
     }
 }

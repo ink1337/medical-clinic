@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Builder
 @Getter
-public class DoctorCommandDTO {
+public class DoctorCreateCommand {
 
     private String email;
     private String password;

@@ -1,6 +1,6 @@
 package com.medicalclinic.mapper;
 
-import com.medicalclinic.model.dto.doctor.DoctorCommandDTO;
+import com.medicalclinic.model.dto.doctor.DoctorCreateCommand;
 import com.medicalclinic.model.dto.doctor.DoctorDTO;
 import com.medicalclinic.model.dto.doctor.DoctorSimpleDTO;
 import com.medicalclinic.model.entity.Doctor;
@@ -23,7 +23,10 @@ public interface DoctorMapper {
 
     Set<DoctorDTO> toDTOs(List<Doctor> source);
 
-    Doctor toEntity(DoctorCommandDTO source);
+    DoctorSimpleDTO toSimpleDTO(Doctor source);
+
+    @Mapping(target = "facilities", ignore = true)
+    Doctor toEntity(DoctorCreateCommand source);
 
     Doctor toEntity(DoctorSimpleDTO source);
 

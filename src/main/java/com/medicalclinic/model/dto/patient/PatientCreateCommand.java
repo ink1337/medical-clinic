@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
-public class PatientCommandDTO {
+public class PatientCreateCommand {
     private final String email;
     private final String firstName;
     private final String lastName;
