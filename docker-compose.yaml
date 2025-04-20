@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: medical_clinic_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - medical-clinic-network
+  medical-clinic-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medical-clinic-be
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/medical_clinic_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - medical-clinic-network
+volumes:
+  pgdata:
+networks:
+  medical-clinic-network:
+

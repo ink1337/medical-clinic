@@ -4,13 +4,14 @@ import com.medicalclinic.model.entity.Doctor;
 import com.medicalclinic.model.entity.Patient;
 import com.medicalclinic.model.entity.Visit;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.OffsetDateTime;
 
-public interface VisitRepository extends JpaRepository<Visit, Long> {
+public interface VisitRepository extends JpaRepository<Visit, Long>, JpaSpecificationExecutor<Visit> {
 
     @Query("select count(v) = 0 from VISITS v where v.startTime <=:endTime and v.endTime >= :startTime and v.doctor=:doctor")
     boolean dateIsAvailable(OffsetDateTime startTime, OffsetDateTime endTime, Doctor doctor);

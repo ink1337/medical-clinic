@@ -27,8 +27,8 @@ public class FacilityController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody FacilityCreateCommand data) {
-        facilityService.add(data);
+    public Long add(@RequestBody FacilityCreateCommand data) {
+        return facilityService.add(data);
     }
 
     @DeleteMapping("/{name}")

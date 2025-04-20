@@ -2,6 +2,7 @@ package com.medicalclinic.service;
 
 import com.medicalclinic.exception.ProcessingDoctorException;
 import com.medicalclinic.mapper.VisitMapper;
+import com.medicalclinic.model.VisitFilter;
 import com.medicalclinic.model.dto.PageableDataDTO;
 import com.medicalclinic.model.dto.visit.VisitCreateCommand;
 import com.medicalclinic.model.dto.visit.VisitDTO;
@@ -11,12 +12,17 @@ import com.medicalclinic.model.entity.Visit;
 import com.medicalclinic.repository.DoctorRepository;
 import com.medicalclinic.repository.PatientRepository;
 import com.medicalclinic.repository.VisitRepository;
+import com.medicalclinic.service.common.VisitSpecification;
 import com.medicalclinic.validator.VisitValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
@@ -36,13 +42,12 @@ public class VisitService {
     }
 
     @Transactional
-    public VisitDTO add(VisitCreateCommand visit) {
+    public Long add(VisitCreateCommand visit) {
         visitValidator.validateForPersist(visit);
         var entity = visitMapper.toEntity(visit);
         Doctor doctor = getDoctorById(visit.getDoctorId());
         entity.setDoctor(doctor);
-        visitRepository.save(entity);
-        return visitMapper.toDTO(entity);
+        return visitRepository.save(entity).getId();
     }
 
     @Transactional
@@ -60,14 +65,11 @@ public class VisitService {
         visitRepository.delete(visit);
     }
 
-    public Set<VisitDTO> getDoctorsVisits(Long doctorId) {
-        var doctor = getDoctorById(doctorId);
-        return visitMapper.toDTOs(doctor.getVisits());
-    }
-
-    public Set<VisitDTO> getPatientsVisits(Long patientId) {
-        var patient = getPatientById(patientId);
-        return visitMapper.toDTOs(patient.getVisits());
+    public PageableDataDTO<VisitDTO> getVisits(VisitFilter visitFilter, Pageable pageable) {
+        visitValidator.validateTime(visitFilter.startTime(), visitFilter.endTime());
+        Specification<Visit> visitQuerySpecification = VisitSpecification.constructVisitSpecification(visitFilter);
+        Page<Visit> result = visitRepository.findAll(visitQuerySpecification, pageable);
+        return PageableDataDTO.from(visitMapper.toDTOs(result.getContent()), result, pageable);
     }
 
     private Visit getVisitWithId(Long visitId) {

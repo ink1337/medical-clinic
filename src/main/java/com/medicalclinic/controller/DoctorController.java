@@ -28,8 +28,8 @@ public class DoctorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody DoctorCreateCommand data) {
-        doctorService.add(data);
+    public Long add(@RequestBody DoctorCreateCommand data) {
+        return doctorService.add(data);
     }
 
     @DeleteMapping("/{email}")

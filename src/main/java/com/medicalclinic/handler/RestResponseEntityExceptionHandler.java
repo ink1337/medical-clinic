@@ -3,6 +3,7 @@ package com.medicalclinic.handler;
 import com.medicalclinic.exception.ProcessingDoctorException;
 import com.medicalclinic.exception.ProcessingFacilityException;
 import com.medicalclinic.exception.ProcessingPatientException;
+import com.medicalclinic.exception.ProcessingVisitException;
 import com.medicalclinic.model.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +29,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(ProcessingDoctorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessage handleProcessingDoctorException(ProcessingDoctorException ex) {
+        return ErrorMessage.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .timestamp(Instant.now().toEpochMilli())
+                .message(ex.getMessage())
+                .build();
+    }
+
+
+    @ExceptionHandler(ProcessingVisitException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleProcessingVisitException(ProcessingVisitException ex) {
         return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .timestamp(Instant.now().toEpochMilli())

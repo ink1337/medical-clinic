@@ -2,6 +2,7 @@ package com.medicalclinic.validator;
 
 import com.medicalclinic.exception.ProcessingDoctorException;
 import com.medicalclinic.exception.ProcessingPatientException;
+import com.medicalclinic.exception.ProcessingVisitException;
 import com.medicalclinic.model.dto.visit.VisitCreateCommand;
 import com.medicalclinic.model.entity.Doctor;
 import com.medicalclinic.model.entity.Visit;
@@ -30,7 +31,7 @@ public class VisitValidator {
     public void validateVisitAvailability(Visit visit) {
         if (visit.getStartTime().isBefore(OffsetDateTime.now()) ||
                 visit.getPatient() != null) {
-            throw new ProcessingPatientException(getMessage("visit.not_available"));
+            throw new ProcessingVisitException(getMessage("visit.not_available"));
         }
     }
 
@@ -40,10 +41,19 @@ public class VisitValidator {
         if (startTime.isBefore(OffsetDateTime.now()) ||
                 startTime.getMinute() % 15 != 0 || endTime.getMinute() % 15 != 0 ||
                 (endTime.isBefore(startTime) || endTime.isEqual(startTime))) {
-            throw new ProcessingPatientException(getMessage("visit.date_is_incorrect"));
+            throw new ProcessingVisitException(getMessage("visit.date_is_incorrect", startTime, endTime));
         }
         if (!visitRepository.dateIsAvailable(visit.getStartTime(), visit.getEndTime(), doctor)) {
-            throw new ProcessingPatientException(getMessage("visit.date_is_not_available"));
+            throw new ProcessingVisitException(getMessage("visit.date_is_not_available", startTime, endTime));
+        }
+    }
+
+    public void validateTime(OffsetDateTime startTime, OffsetDateTime endTime) {
+        if (endTime != null && endTime.isBefore(OffsetDateTime.now())) {
+            throw new ProcessingVisitException(getMessage("visit.date_is_incorrect", startTime, endTime));
+        }
+        if (startTime != null && endTime != null && endTime.isBefore(startTime)) {
+            throw new ProcessingVisitException(getMessage("visit.date_is_incorrect", startTime, endTime));
         }
     }
 
@@ -51,7 +61,7 @@ public class VisitValidator {
         if (visit.getDoctorId() == null ||
                 visit.getStartTime() == null ||
                 visit.getEndTime() == null) {
-            throw new ProcessingPatientException(getMessage("visit.all_field_must_be_set"));
+            throw new ProcessingVisitException(getMessage("visit.all_field_must_be_set"));
         }
     }
 

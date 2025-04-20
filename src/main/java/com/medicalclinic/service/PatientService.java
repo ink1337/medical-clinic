@@ -36,9 +36,9 @@ public class PatientService {
     }
 
     @Transactional
-    public void add(PatientCreateCommand patient) {
+    public Long add(PatientCreateCommand patient) {
         patientValidator.validatePatientForPersist(patient);
-        patientRepository.save(patientMapper.toEntity(patient));
+        return patientRepository.save(patientMapper.toEntity(patient)).getId();
     }
 
     @Transactional

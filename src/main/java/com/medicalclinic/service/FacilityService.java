@@ -38,7 +38,7 @@ public class FacilityService {
     }
 
     @Transactional
-    public void add(FacilityCreateCommand facility) {
+    public Long add(FacilityCreateCommand facility) {
         var doctors = facility.getDoctors();
         facilityValidator.validateFacilityForPersist(facility);
         var entity = facilityMapper.toEntity(facility);
@@ -46,7 +46,7 @@ public class FacilityService {
             doctorValidator.validateSimpleDoctors(doctors);
             entity.setDoctors(doctorMapper.toEntity(doctors));
         }
-        facilityRepository.save(entity);
+        return facilityRepository.save(entity).getId();
     }
 
     @Transactional

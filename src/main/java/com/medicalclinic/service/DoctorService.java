@@ -42,7 +42,7 @@ public class DoctorService {
     }
 
     @Transactional
-    public void add(DoctorCreateCommand doctor) {
+    public Long add(DoctorCreateCommand doctor) {
         var facilities = doctor.getFacilities();
         doctorValidator.validateDoctorForPersist(doctor);
         var entity = doctorMapper.toEntity(doctor);
@@ -50,7 +50,7 @@ public class DoctorService {
             facilityValidator.validateSimpleFacilities(facilities);
             entity.setFacilities(facilityMapper.toEntity(facilities));
         }
-        doctorRepository.save(entity);
+        return doctorRepository.save(entity).getId();
     }
 
     @Transactional

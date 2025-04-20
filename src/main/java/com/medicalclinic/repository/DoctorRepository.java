@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Optional<Doctor> findByEmail(String email);
 
-    @Query("SELECT p FROM Doctor d LEFT JOIN FETCH d.visits WHERE d.id = :id")
+    @Query("SELECT d FROM Doctor d LEFT JOIN FETCH d.visits WHERE d.id = :id")
     Optional<Doctor> findByIdWithVisits(@Param("id") Long id);
 }
