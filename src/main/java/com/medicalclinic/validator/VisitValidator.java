@@ -1,7 +1,6 @@
 package com.medicalclinic.validator;
 
 import com.medicalclinic.exception.ProcessingDoctorException;
-import com.medicalclinic.exception.ProcessingPatientException;
 import com.medicalclinic.exception.ProcessingVisitException;
 import com.medicalclinic.model.dto.visit.VisitCreateCommand;
 import com.medicalclinic.model.entity.Doctor;

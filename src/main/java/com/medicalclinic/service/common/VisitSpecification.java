@@ -4,7 +4,6 @@ import com.medicalclinic.model.VisitFilter;
 import com.medicalclinic.model.entity.Visit;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -21,10 +21,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
-import java.util.Objects;
-import java.util.Set;
-
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
 @RequiredArgsConstructor
@@ -35,11 +31,6 @@ public class VisitService {
     private final VisitValidator visitValidator;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
-
-    public PageableDataDTO<VisitDTO> getAll(Pageable pageable) {
-        var result = visitRepository.findAll(pageable);
-        return PageableDataDTO.from(visitMapper.toDTOs(result.getContent()), result, pageable);
-    }
 
     @Transactional
     public Long add(VisitCreateCommand visit) {
