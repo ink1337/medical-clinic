@@ -90,12 +90,13 @@ class PatientServiceTest {
     @Test
     void add_ValidPatient_SavesToRepository() {
         PatientCreateCommand command = PatientCreateCommand.builder().build();
-        Patient entity = new Patient();
+        Patient entity = Patient.builder().id(1L).build();
+        when(patientRepository.save(any())).thenReturn(entity);
 
-        patientService.add(command);
+        var result = patientService.add(command);
 
         verify(patientValidator).validatePatientForPersist(command);
-        verify(patientRepository).save(entity);
+        assertEquals(1L, result);
     }
 
     @Test

@@ -16,6 +16,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table
@@ -56,6 +57,18 @@ public class Patient {
         lastName = patientData.getLastName();
         phoneNumber = patientData.getPhoneNumber();
         birthday = patientData.getBirthday();
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Patient patient)) return false;
+
+        return id != null && Objects.equals(id, patient.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
 

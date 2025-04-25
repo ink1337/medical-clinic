@@ -37,11 +37,12 @@ public class DoctorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long add(@RequestBody DoctorCreateCommand data) {
-        return doctorService.add(data);
+    public Long add(@RequestBody DoctorCreateCommand commad) {
+        return doctorService.add(commad);
     }
 
     @DeleteMapping("/{email}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByEmail(@PathVariable("email") String email) {
         doctorService.deleteByEmail(email);
     }

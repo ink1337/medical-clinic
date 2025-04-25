@@ -55,7 +55,7 @@ public class DoctorValidator {
                 || doctor.getPassword() == null
                 || doctor.getFirstName() == null
                 || doctor.getLastName() == null
-                || doctor.getSpeciality() == null) {
+                || doctor.getSpecialization() == null) {
             throw new ProcessingDoctorException(getMessage("doctor.all_field_must_be_set", doctor.getEmail()));
         }
     }
@@ -65,7 +65,7 @@ public class DoctorValidator {
                 || doctor.getPassword() == null
                 || doctor.getFirstName() == null
                 || doctor.getLastName() == null
-                || doctor.getSpeciality() == null) {
+                || doctor.getSpecialization() == null) {
             throw new ProcessingDoctorException(getMessage("doctor.all_field_must_be_set", doctor.getEmail()));
         }
     }

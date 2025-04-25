@@ -8,8 +8,8 @@ import com.medicalclinic.repository.FacilityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.medicalclinic.exception.DictionaryHandler.getMessage;
 
@@ -40,7 +40,7 @@ public class FacilityValidator {
         }
     }
 
-    public void validateSimpleFacilities(Set<FacilitySimpleDTO> facilities) {
+    public void validateSimpleFacilities(List<FacilitySimpleDTO> facilities) {
         facilities.forEach(this::validateNoneNullFields);
     }
 

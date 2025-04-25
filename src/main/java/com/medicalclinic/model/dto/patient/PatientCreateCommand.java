@@ -1,12 +1,12 @@
 package com.medicalclinic.model.dto.patient;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 @Builder
-@Getter
+@Data
 public class PatientCreateCommand {
     private final String email;
     private final String firstName;

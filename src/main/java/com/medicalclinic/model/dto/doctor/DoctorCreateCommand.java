@@ -2,18 +2,18 @@ package com.medicalclinic.model.dto.doctor;
 
 import com.medicalclinic.model.dto.facility.FacilitySimpleDTO;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Builder
-@Getter
+@Data
 public class DoctorCreateCommand {
 
     private String email;
     private String password;
     private String firstName;
     private String lastName;
-    private String speciality;
-    private Set<FacilitySimpleDTO> facilities;
+    private String specialization;
+    private List<FacilitySimpleDTO> facilities;
 }

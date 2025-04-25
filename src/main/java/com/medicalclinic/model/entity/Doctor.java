@@ -60,7 +60,7 @@ public class Doctor {
         this.password = updatedDoctor.getPassword();
         this.firstName = updatedDoctor.getFirstName();
         this.lastName = updatedDoctor.getLastName();
-        this.speciality = updatedDoctor.getSpeciality();
+        this.speciality = updatedDoctor.getSpecialization();
     }
 
     @Override

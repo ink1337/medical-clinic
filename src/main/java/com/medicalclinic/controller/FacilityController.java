@@ -40,6 +40,7 @@ public class FacilityController {
     }
 
     @DeleteMapping("/{name}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByName(@PathVariable("name") String name) {
         facilityService.deleteByName(name);
     }

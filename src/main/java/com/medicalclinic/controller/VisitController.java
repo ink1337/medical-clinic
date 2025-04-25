@@ -41,8 +41,8 @@ public class VisitController {
         visitService.registerPatientToVisit(visitId, patientId);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteVisit(@PathVariable("id") Long visitId) {
         visitService.deleteVisit(visitId);
     }

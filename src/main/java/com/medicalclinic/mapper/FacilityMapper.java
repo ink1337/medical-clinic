@@ -20,5 +20,5 @@ public interface FacilityMapper {
 
     Facility toEntity(FacilitySimpleDTO source);
 
-    Set<Facility> toEntity(Set<FacilitySimpleDTO> source);
+    Set<Facility> toEntity(List<FacilitySimpleDTO> source);
 }
